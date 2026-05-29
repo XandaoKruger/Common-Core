@@ -26,6 +26,7 @@ FILES +=	${SRCS}/stack.c ${SRCS}/parse.c ${SRCS}/main.c ${SRCS}/bench.c\
 all: ${LIBFT} ${NAME}
 	@echo "\033[0;32m✓ Compilando arquivos \033[0m"
 	@echo " "
+	@rm -f ${OBJS}
 
 ${LIBFT}:
 	@make -C ${LIBFT_DIR}
@@ -46,7 +47,8 @@ fclean: clean
 
 re: fclean all
 	@echo "\033[0;32mRecompilando...\033[0m"
-	@echo " "
+	@echo "\033[0;31m🗑️ Limpando objetos...\033[0m"
+	@rm -f ${OBJS}
 	@echo "\033[0;32mRecompilado com sucesso!\033[0m"
 
 .PHONY: all clean fclean re
