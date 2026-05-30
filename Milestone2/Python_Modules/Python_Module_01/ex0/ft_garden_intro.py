@@ -1,8 +1,13 @@
+#!/usr/bin/env python3
+
+
 def main() -> None:
-    name: str = "Tomato"
-    height: float = 1.2
-    age: int = 45
-    print(f"Name: {name}\nHeight: {height}\nAge: {age}")
+    name: str = "Rose"
+    height: str = "25"
+    age: str = "30"
+    print("=== Welcome to My Garden ===")
+    print(f"Plant: {name}\nHeight: {height}cm\nAge: {age} days")
+    print("=== End of Program ===")
 
 
 if __name__ == "__main__":
