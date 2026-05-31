@@ -21,6 +21,7 @@ if __name__ == "__main__":
         Plant("Sunflower", 80.0, 45),
         Plant("Fern", 15.0, 120)
     ]
+
     for plant in garden:
         print("Created: ", end="")
         plant.show()
