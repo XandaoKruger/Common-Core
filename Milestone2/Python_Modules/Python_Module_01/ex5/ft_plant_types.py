@@ -73,7 +73,7 @@ class Flower(Plant):
 
 
 class Tree(Plant):
-    """Classe espeializada em arvores"""
+    """Classe especializada em arvores"""
     def __init__(
         self, name, height, age, growth_rate, trunk_diameter: float
     ) -> None:
