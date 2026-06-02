@@ -10,12 +10,10 @@ class Plant():
             self.show_count: int = 0
             self.shade_count: int = 0
 
-        def display(self, is_tree: bool = False) -> None:
+        def display(self) -> None:
             """Exibe as estatisticas"""
             print(f"Stats: {self.grow_count} grow, ", end="")
             print(f"{self.age_count} age, {self.show_count} show")
-            if is_tree:
-                print(f"{self.shade_count} shade")
 
     def __init__(
         self, name: str, height: float, age: int, growth_rate: float
@@ -144,6 +142,7 @@ class Tree(Plant):
     ) -> None:
         super().__init__(name, height, age, growth_rate)
         self.trunk_diameter = trunk_diameter
+        self._stats = self.TreeStats()
 
     def show(self) -> None:
         """Sobrepoe show para mostrar arvore"""
@@ -175,7 +174,7 @@ class Vegetable(Plant):
 
     def age(self, days: int = 1) -> None:
         """Aumenta o valor nutricional"""
-        super().age()
+        super().age(days)
         self.nutritional_value += days
 
     def grow(self) -> None:
