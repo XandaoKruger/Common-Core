@@ -123,8 +123,19 @@ class Seed(Flower):
 
 class Tree(Plant):
     """Classe especializada dem arvores"""
-    class Stats(Plant.PlantStats):
-        # VER ISSO AQUI 
+    class TreeStats(Plant.PlantStats):
+        """Classe interna especializada em stats de arvore"""
+        def __init__(self) -> None:
+            super().__init__()
+            self.shade_count: int = 0
+
+        def display(self) -> None:
+            """Sobrepoe o display para mostrar o count shade"""
+            super().display()
+            print(f"{self.shade_count} shade")
+    
+    _stats: TreeStats
+
     def __init__(
         self, name: str, height: float, age: int,
         growth_rate: float, trunk_diameter: float
@@ -172,8 +183,8 @@ class Vegetable(Plant):
 
 def display_plat_stats(plant: Tree) -> None:
     """Funcao externa para exibir estatisticas de qualquer planta"""
-    is_tree = isinstance(plant, Tree)
-    plant._stats.display(is_tree)
+    plant._stats.display()
 
 
 if __name__: "__main__":
+    print()
