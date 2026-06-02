@@ -130,7 +130,6 @@ class Tree(Plant):
         def __init__(self) -> None:
             super().__init__()
             self.shade_count: int = 0
-            self._stats = self.TreeStats()
 
         def display(self) -> None:
             """Sobrepoe o display para mostrar o count shade"""
