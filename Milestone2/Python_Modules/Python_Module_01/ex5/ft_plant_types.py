@@ -41,7 +41,7 @@ class Plant():
             self._age = int(age)
             print(f"Age updated: {self._age} days")
 
-    def age_plant(self) -> None:
+    def age(self) -> None:
         """Aumenta age em um dia"""
         self._age += 1
 
@@ -53,7 +53,10 @@ class Plant():
 
 class Flower(Plant):
     """Classe especializada para flores"""
-    def __init__(self, name, height, age, growth_rate, color: str) -> None:
+    def __init__(
+        self, name: str, height: float, age: int, growth_rate: float,
+        color: str
+    ) -> None:
         super().__init__(name, height, age, growth_rate)
         self.color = color
         self.has_bloomed: bool = False
@@ -75,7 +78,8 @@ class Flower(Plant):
 class Tree(Plant):
     """Classe especializada em arvores"""
     def __init__(
-        self, name, height, age, growth_rate, trunk_diameter: float
+        self, name: str, height: float, age: int, growth_rate: float,
+        trunk_diameter: float
     ) -> None:
         super().__init__(name, height, age, growth_rate)
         self.trunk_diameter = trunk_diameter
@@ -94,7 +98,8 @@ class Tree(Plant):
 class Vegetable(Plant):
     """Classe especializada em vegetais"""
     def __init__(
-        self, name, height, age, growth_rate, harvest_season: str
+        self, name: str, height: float, age: int, growth_rate: float,
+        harvest_season: str
     ) -> None:
         super().__init__(name, height, age, growth_rate)
         self.harvest_season = harvest_season
@@ -104,11 +109,11 @@ class Vegetable(Plant):
         """Sobrepoe o show mae para este"""
         super().show()
         print(f"Harvest season: {self.harvest_season}")
-        print(f"nutritional value: {self.nutritional_value}")
+        print(f"Nutritional value: {self.nutritional_value}")
 
-    def age_plant(self) -> None:
+    def age(self) -> None:
         """Chama a mae e aumenta o valor nutricional"""
-        super().age_plant()
+        super().age()
         self.nutritional_value += 1
 
     def grow(self) -> None:
@@ -139,6 +144,6 @@ if __name__ == "__main__":
     tomato.show()
     print("[make tomato grow and age for 20 days]")
     for tomate in range(20):
-        tomato.age_plant()
+        tomato.age()
         tomato.grow()
     tomato.show()
