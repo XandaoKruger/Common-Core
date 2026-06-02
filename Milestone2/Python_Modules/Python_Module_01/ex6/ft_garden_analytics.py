@@ -12,8 +12,8 @@ class Plant():
 
         def display(self, is_tree: bool = False) -> None:
             """Exibe as estatisticas"""
-            print(f"Stats: {self.grow_count} grow, {self.age_count} age, ", end="")
-            print(f"{self.show_count} show")
+            print(f"Stats: {self.grow_count} grow, ", end="")
+            print(f"{self.age_count} age, {self.show_count} show")
             if is_tree:
                 print(f"{self.shade_count} shade")
 
@@ -72,7 +72,7 @@ class Plant():
     def is_older_than_an_year(age: int) -> bool:
         """Confere se a planta e mais velha que um ano"""
         return age > 365
-    
+
     @classmethod
     def anonymous(cls) -> "Plant":
         """Cria uma instancia de uma planta anonima, sem dados iniciais"""
@@ -82,7 +82,8 @@ class Plant():
 class Flower(Plant):
     """Classe especializada para flores"""
     def __init__(
-        self, name: str, height: float, age: int, growth_rate: float, color: str
+        self, name: str, height: float, age: int, growth_rate: float,
+        color: str
     ) -> None:
         super().__init__(name, height, age, growth_rate)
         self.color = color
@@ -105,7 +106,8 @@ class Flower(Plant):
 class Seed(Flower):
     """Classe especializada para sementes, herda de flor"""
     def __init__(
-        self, name: str, height: float, age: int, growth_rate: float, color: str
+        self, name: str, height: float, age: int, growth_rate: float,
+        color: str
     ) -> None:
         super().__init__(name, height, age, growth_rate, color)
         self.seeds_count: int = 0
@@ -134,7 +136,7 @@ class Tree(Plant):
             """Sobrepoe o display para mostrar o count shade"""
             super().display()
             print(f"{self.shade_count} shade")
-    
+
     _stats: TreeStats
 
     def __init__(
@@ -189,10 +191,10 @@ def display_plant_stats(plant: Plant) -> None:
 
 if __name__ == "__main__":
     print("=== Garden statistics ===")
-    
+
     print("=== Check year-old")
     print(f"Is 30 days more than year? -> {Plant.is_older_than_an_year(30)}")
-    print(f"Is 400 days more tha a year? ")
+    print("Is 400 days more tha a year? ")
     print(f"-> {Plant.is_older_than_an_year(400)}")
 
     print("")
