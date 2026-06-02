@@ -186,5 +186,50 @@ def display_plat_stats(plant: Tree) -> None:
     plant._stats.display()
 
 
-if __name__: "__main__":
-    print()
+if __name__ == "__main__":
+    print("=== Garden statistics ===")
+    
+    print("=== Check year-old")
+    print(f"Is 30 days more than year? -> {Plant.is_older_than_year(30)}")
+    print(f"Is 400 days more tha a year? ")
+    print("-> {Plant.is_older_than_an_year(400)}")
+
+    print("=== Flower")
+    rose = Flower("Rose", 15.0, 10, 8.0, "red")
+    rose.show()
+    print("[statistics for Rose]")
+    display_plat_stats(rose)
+
+    print("[asking the rose to grow and bloom]")
+    rose.grow()
+    rose.bloom()
+    rose.show()
+    print("[statistics for Rose]")
+    display_plat_stats(rose)
+
+    print("=== Tree")
+    oak = Tree("Oak", 200.0, 365, 12.0, 5.0)
+    oak.show()
+    print("[statistics for Oak]")
+    display_plat_stats(oak)
+    print("[asking the oak to produce shade]")
+    oak.produce_shade()
+    print("[statistics for Oak]")
+    display_plat_stats(oak)
+
+    print("=== Seed")
+    sunflower = Seed("Sunflower", 80.0, 45, 30.0, "yellow")
+    sunflower.show()
+    print("[make sunflower gorw, age and bloom]")
+    sunflower.grow()
+    sunflower.bloom()
+    sunflower.age(20)
+    sunflower.show()
+    print("[statistics for sunflower]")
+    display_plat_stats(sunflower)
+
+    print("=== Anonymous")
+    anon = Plant.anonymous()
+    anon.show()
+    print("[statistics for Unknown plant]")
+    display_plat_stats(anon)
