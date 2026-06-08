@@ -191,8 +191,8 @@ if __name__ == "__main__":
     print("=== Garden statistics ===")
 
     print("=== Check year-old")
-    print(f"Is 30 days more than year? -> {Plant.is_older_than_an_year(30)}")
-    print("Is 400 days more tha a year? ")
+    print(f"Is 30 days more than a year? -> {Plant.is_older_than_an_year(30)}")
+    print("Is 400 days more than a year? ", end="")
     print(f"-> {Plant.is_older_than_an_year(400)}")
 
     print("")
