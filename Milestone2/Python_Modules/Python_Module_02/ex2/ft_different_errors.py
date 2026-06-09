@@ -8,7 +8,8 @@ def garden_operations(operation_number: int) -> None:
     elif operation_number == 2:
         open("/non/existent/file")
     elif operation_number == 3:
-        "text" + 1 # type: ignore
+        "text" + 1  # type: ignore
+
 
 def test_error_types() -> None:
     print("Testing operation 0...")
@@ -33,7 +34,7 @@ def test_error_types() -> None:
         garden_operations(3)
     except TypeError as e:
         print(f"Caught TypeError: {e}")
-    
+
     print("Testing operation 4...")
     garden_operations(4)
     print("Operation completed successfully")
