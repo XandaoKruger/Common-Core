@@ -4,6 +4,7 @@ def input_temperature(temp_str: str) -> int:
     """Conversão para inteiro"""
     return int(temp_str)
 
+
 def test_temperature():
     """Input da temperatura"""
     print("Input data is '25'")
