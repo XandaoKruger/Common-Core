@@ -7,7 +7,7 @@ def main() -> None:
     age: str = "30"
     print("=== Welcome to My Garden ===")
     print(f"Plant: {name}\nHeight: {height}cm\nAge: {age} days")
-    print("=== End of Program ===")
+    print("\n=== End of Program ===")
 
 
 if __name__ == "__main__":
