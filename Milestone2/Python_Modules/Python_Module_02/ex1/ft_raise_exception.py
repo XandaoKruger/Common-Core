@@ -9,7 +9,7 @@ def input_temperature(temp_str: str) -> int:
     return temp
 
 
-def test_temperature():
+def test_temperature() -> None:
     print("Input data is '25'")
     try:
         result = input_temperature("25")
