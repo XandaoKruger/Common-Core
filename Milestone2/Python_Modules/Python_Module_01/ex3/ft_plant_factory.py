@@ -7,12 +7,10 @@ class Plant():
         self.height = height
         self.age = age
 
-
     def grow(self, height_g: float, age_g: int) -> None:
         """Faz a planta crescer e envelhecer"""
         self.height += height_g
         self.age += age_g
-
 
     def show(self) -> None:
         """Mostra as informações da planta"""

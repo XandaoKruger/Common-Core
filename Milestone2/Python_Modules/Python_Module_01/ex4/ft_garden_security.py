@@ -50,7 +50,7 @@ if __name__ == "__main__":
     rose.set_height(25.0)
     rose.set_age(30)
     print()
-    
+
     rose.set_height(-5.0)
     rose.set_age(-1)
     print()
