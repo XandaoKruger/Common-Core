@@ -7,6 +7,13 @@ class Plant():
         self.height = height
         self.age = age
 
+
+    def grow(self, height_g: float, age_g: int) -> None:
+        """Faz a planta crescer e envelhecer"""
+        self.height += height_g
+        self.age += age_g
+
+
     def show(self) -> None:
         """Mostra as informações da planta"""
         print(f"{self.name}: {self.height}cm, {self.age} days old")
@@ -24,4 +31,10 @@ if __name__ == "__main__":
 
     for plant in garden:
         print("Created: ", end="")
+        plant.show()
+
+    print("\n=== Garden growing ===")
+
+    for plant in garden:
+        plant.grow(2.0, 5)
         plant.show()
