@@ -4,6 +4,7 @@ class GardenError(Exception):
     def __init__(self, message: str = "Unknown garden error") -> None:
         super().__init__(message)
 
+
 class PlantError(GardenError):
     """Mostrador de erros de plants"""
     def __init__(self, message: str = "Unknown plant error") -> None:
