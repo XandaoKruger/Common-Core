@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 class GardenError(Exception):
+    """Escreve erro geral caso seja chamado diretamente"""
     def __init__(self, message: str = "Unknown garden error") -> None:
         super().__init__(message)
 
