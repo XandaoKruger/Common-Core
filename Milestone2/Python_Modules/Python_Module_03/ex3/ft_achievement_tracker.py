@@ -14,7 +14,7 @@ CONQUISTAS = [
 
 
 def gen_player_achievements() -> set:
-    # Randint para randomizar entre 5 e 9
+    # Randint para randomizar entre 13 e 17
     quantidade = random.randint(13, 17)
 
     # Escolhe SEM repetir, dentro da quantidade (que é aleatorizada a cima)
