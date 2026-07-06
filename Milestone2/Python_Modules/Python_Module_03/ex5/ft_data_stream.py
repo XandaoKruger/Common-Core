@@ -24,11 +24,12 @@ def consume_event(
     events: list[tuple[str, str]]
 ) -> typing.Generator[tuple[str, str], None, None]:
     while events:
-        # Randomiza um número do tamanho da lista 
+        # Randomiza um número do tamanho da lista
         random_index = random.randint(0, len(events) - 1)
         removed = events[random_index]
         del events[random_index]
         yield removed
+
 
 if __name__ == "__main__":
 
@@ -42,7 +43,7 @@ if __name__ == "__main__":
 
     # Criando a lista de 10
     lista_10: list[tuple[str, str]] = []
-    for _ in range (10):
+    for _ in range(10):
         lista_10 = lista_10 + [next(gen)]
 
     print(f"\nBuilt list of 10 events: {lista_10}\n")
