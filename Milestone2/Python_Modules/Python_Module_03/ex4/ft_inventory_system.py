@@ -4,14 +4,14 @@ import sys
 
 def inventory_loot() -> None:
 
-    inventario: dict[str, int] = {} 
+    inventario: dict[str, int] = {}
 
     for arg in sys.argv[1:]:
 
         # Split dos argumentos via :
         partes = arg.split(":")
 
-        # Tratamento de argumento inválido, mais "continue" para passar ao 
+        # Tratamento de argumento inválido, mais "continue" para passar ao
         # próximo argumento, sem executar o resto.
         if len(partes) != 2:
             print(f"Error - Invalid parameter '{arg}'")
@@ -51,7 +51,7 @@ def inventory_loot() -> None:
 
     menor_item = None
     # Para iniciar de modo seguro, sem chutar um valor, usar a mecanica nativa
-    #  de infinito -> "float('inf')" 
+    #  de infinito -> "float('inf')"
     menor_quant = float('inf')
 
     for item_ in inventario:
@@ -73,5 +73,5 @@ def inventory_loot() -> None:
 
 
 if __name__ == "__main__":
-    print("=== Inventory System Analysis ===") 
+    print("=== Inventory System Analysis ===")
     inventory_loot()

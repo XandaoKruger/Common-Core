@@ -13,7 +13,7 @@ CONQUISTAS = [
 ]
 
 
-def gen_player_achievements() -> set:
+def gen_player_achievements() -> set[str]:
     # Randint para randomizar entre 13 e 17
     quantidade = random.randint(13, 17)
 
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     for nome, conjunto in exibicao:
         # Cria um saco vazio para guardar todos os achievments dos outros
-        outros: set = set()
+        outros: set[str] = set()
         # Mais um loop para comparar um jogador com outro jogador
         for n, c in exibicao:
             # Verificar se não é o mesmo jogador

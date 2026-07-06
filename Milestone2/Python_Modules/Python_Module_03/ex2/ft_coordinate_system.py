@@ -2,7 +2,7 @@
 from math import sqrt
 
 
-def get_player_pos() -> tuple:
+def get_player_pos() -> tuple[float, ...]:
     while True:
         cord = input("Enter new coordinates as float in format 'x,y,z': ")
         partes = cord.split(",")
@@ -15,7 +15,7 @@ def get_player_pos() -> tuple:
             print("Invalid syntax")
             continue
 
-        convert: tuple = ()
+        convert: tuple[float, ...] = ()
         erros = False
 
         for parte in partes:
