@@ -26,10 +26,9 @@ def consume_event(
     while events:
         # Randomiza um número do tamanho da lista 
         random_index = random.randint(0, len(events) - 1)
-
-        # Pop garante que antes de remover eu ainda tenha o dado para yield
-        remove = events.pop(random_index)
-        yield remove
+        removed = events[random_index]
+        del events[random_index]
+        yield removed
 
 if __name__ == "__main__":
 
@@ -44,7 +43,7 @@ if __name__ == "__main__":
     # Criando a lista de 10
     lista_10: list[tuple[str, str]] = []
     for _ in range (10):
-        lista_10.append(next(gen))
+        lista_10 = lista_10 + [next(gen)]
 
     print(f"\nBuilt list of 10 events: {lista_10}\n")
 
