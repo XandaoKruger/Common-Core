@@ -7,19 +7,24 @@ def get_player_pos() -> tuple[float, ...]:
         cord = input("Enter new coordinates as float in format 'x,y,z': ")
         partes = cord.split(",")
 
+        # len() hardcoded porque nao esta liberado
         leng = 0
         for _ in partes:
             leng += 1
 
+        # Verificacao de argumentos
         if leng != 3:
             print("Invalid syntax")
             continue
 
+        # Iniciando a lista e o bool da valvula de escape
         convert: tuple[float, ...] = ()
         erros = False
 
         for parte in partes:
             try:
+
+                # Conversao p/ float e adicionar a lista
                 val_float = float(parte)
                 convert += (val_float,)
             except ValueError as e:
@@ -27,6 +32,7 @@ def get_player_pos() -> tuple[float, ...]:
                 erros = True
                 break
 
+        # Valvula de escape, sai do while antes de executar o return
         if erros:
             continue
 
