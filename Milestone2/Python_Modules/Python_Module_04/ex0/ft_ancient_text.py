@@ -15,6 +15,8 @@ def main() -> None:
     print(f"Accessing file: '{argv[1]}'")
 
     try:
+        # typing.IO é uma classe genérica que representa qualquer objeto que se
+        # comporte como um arquivo de texto
         archive: typing.IO[str] = open(argv[1])
         lido = archive.read()
         print("---")
