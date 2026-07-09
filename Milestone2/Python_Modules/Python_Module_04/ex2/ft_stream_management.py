@@ -28,9 +28,13 @@ def main() -> None:
         edit_lines = "\n".join(editada)
         print(f"\nTransform data:\n---\n\n{edit_lines}\n\n---")
 
+        # Stdout para printar o que eu estou digitando aqui
         sys.stdout.write("Enter new file name (or empty): ")
         sys.stdout.flush()
+
+        # Stdin para capturar o que o usuário digitou
         new_name = sys.stdin.readline().strip()
+
         if not new_name:
             print("Not saving data.")
         else:
