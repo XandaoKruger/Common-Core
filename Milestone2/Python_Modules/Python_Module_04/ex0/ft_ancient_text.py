@@ -33,9 +33,9 @@ if __name__ == "__main__":
     else:
         main()
 
-# cat > ancient_fragment.txt << 'EOF'
+#cat > ancient_fragment.txt << 'EOF'
 #
-# [FRAGMENT 001] Digital preservation protocols established 2087
-# [FRAGMENT 002] Knowledge must survive the entropy wars
-# [FRAGMENT 003] Every byte saved is a victory against oblivion
-# EOF
+#[FRAGMENT 001] Digital preservation protocols established 2087
+#[FRAGMENT 002] Knowledge must survive the entropy wars
+#[FRAGMENT 003] Every byte saved is a victory against oblivion
+#EOF
