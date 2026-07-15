@@ -120,6 +120,7 @@ class LogProcessor(DataProcessor):
             self._storage.append((self._index, format_log(data)))
             self._index += 1
 
+
 class DataStream:
     def __init__(self) -> None:
 
@@ -165,7 +166,10 @@ class DataStream:
 
             # Caso nenhum processador aceite o elemento
             if not processado:
-                print(f"DataStream error - Can't process element in stream: {elemento}")
+                print(
+                        "DataStream error - Can't process element in stream: "
+                        f"{elemento}"
+                )
 
     def print_processors_stats(self) -> None:
         print("== DataStream statistics ==")
@@ -184,5 +188,99 @@ class DataStream:
             # Para seguir o PDF, mudo o nome para adicionar um espaço antes
             replace = class_name.replace("Processor", " Processor")
             print(f"{replace}: total {total_processado} items processed, "
-                  f"remaining {resto} on processor"
-            )
+                  f"remaining {resto} on processor")
+
+
+if __name__ == "__main__":
+
+    print("=== Code Nexus - Data Stream ===")
+    print()
+
+    print("Initialize Data Stream...")
+    stream_processor = DataStream()
+
+    # Mostra stats iniciais (sem processos)
+    stream_processor.print_processors_stats()
+    print()
+
+    # Regitra apenas o Numeric Processor
+    print("Registering Numeric Processor")
+    print()
+    num_proc = NumericProcessor()
+    stream_processor.register_processor(num_proc)
+
+    # "Lote" de dados (iguais do subj.)
+    dados = [
+            'Hello world',
+            [3.14, -1, 2.71],
+            [
+                {
+                    'log_level': 'WARNING',
+                    'log_message': 'Telnet access! Use ssh instead'
+                },
+                {
+                    'log_level': 'INFO',
+                    'log_message': 'User wil is connected'
+                }
+            ],
+            42,
+            ['Hi', 'five']
+        ]
+
+    # Envia 1º "lote" (com erros de não numéricos)
+    print(f"Send first batch of data on stream: {dados}")
+    stream_processor.process_stream(dados)
+    stream_processor.print_processors_stats()
+    print()
+
+    # Registra os outros processadores
+    print("Registering other data processors")
+    text_proc = TextProcessor()
+    log_proc = LogProcessor()
+    stream_processor.register_processor(text_proc)
+    stream_processor.register_processor(log_proc)
+
+    # Reenvia o lote de dados corretamente
+    print("Send the same batch again")
+    stream_processor.process_stream(dados)
+    stream_processor.print_processors_stats()
+    print()
+
+    # Dict que define nome e quantidade
+    consumo = {
+        "NumericProcessor": 3,
+        "TextProcessor": 2,
+        "LogProcessor": 1
+    }
+
+    # Tira o "Processor" para ficar igual no PDF
+    partes_consumo = [
+        f"{classe.replace('Processor', '')} {qtd}"
+        for classe, qtd in consumo.items()
+    ]
+
+    # Junta uma virgula e um espaço para separar o print
+    str_consumo = ", ".join(partes_consumo)
+
+    print(f"Consume some elements for the data processors: {str_consumo}")
+
+    # Para cada processo, pega o nome
+    for proc in stream_processor._processos:
+        nome_classe = proc.__class__.__name__
+
+        # Se o nome estiver no dict, ele verifica a quantidade. (O py consegue
+        # ver a quantidade numérica do nome, sabe que NumericProcessor vale 3)
+        if nome_classe in consumo:
+
+            # Pega o valor e coloca em quantidade para fazer o range
+            quantidade = consumo[nome_classe]
+
+            # Guarda e solta o output que da pop
+            for _ in range(quantidade):
+                if proc._storage:
+                    proc.output()
+
+    print()
+
+    # Stats finais após o consumo.
+    stream_processor.print_processors_stats()
