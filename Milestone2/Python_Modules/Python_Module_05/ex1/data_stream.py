@@ -90,7 +90,7 @@ class LogProcessor(DataProcessor):
             return all(
                 isinstance(a, str) and isinstance(b, str)
                 for a, b in data.items()
-                )
+            )
         if isinstance(data, list):
             if len(data) == 0:
                 return True
@@ -262,7 +262,7 @@ if __name__ == "__main__":
     # Junta uma virgula e um espaço para separar o print
     str_consumo = ", ".join(partes_consumo)
 
-    print(f"Consume some elements for the data processors: {str_consumo}")
+    print(f"Consume some elements from the data processors: {str_consumo}")
 
     # Para cada processo, pega o nome
     for proc in stream_processor._processos:
