@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Protocol
 
 
 class DataProcessor(ABC):
@@ -124,53 +124,34 @@ class LogProcessor(DataProcessor):
 class DataStream:
     def __init__(self) -> None:
 
-        # List de armazenamento de instâncias dos processadores
         self._processos: list[DataProcessor] = []
-
-        # Dict p guardar total de item por classe ("item":quant)
         self._stats: dict[str, int] = {}
 
-    # proc obrigatoriamente precisa receber as regras de DataProcessor
     def register_processor(self, proc: DataProcessor) -> None:
 
-        # Adiciona o processador na lista de processos
         self._processos.append(proc)
-
-        # Descobrir o nome do processo
         class_name = proc.__class__.__name__
-
-        # Contador do processador no dict
         self._stats[class_name] = 0
 
     def process_stream(self, stream: list[Any]) -> None:
         for elemento in stream:
             processado = False
 
-            # Percorre os processadores
             for proc in self._processos:
-
-                # Faz a validação
                 if proc.validate(elemento):
 
-                    # Quantidade de elementos no proc storage
                     quant_origin = len(proc._storage)
 
-                    # Se aceitar, processa
                     proc.ingest(elemento)
 
-                    # Atualiza a quantidade
                     quant_att = len(proc._storage)
 
-                    # Atualiza as stats usando o nome da classe
                     class_name = proc.__class__.__name__
                     self._stats[class_name] += quant_att - quant_origin
 
                     processado = True
-
-                    # Para de procurar novos processadores para esse elemento
                     break
 
-            # Caso nenhum processador aceite o elemento
             if not processado:
                 print(
                         "DataStream error - Can't process element in stream: "
@@ -180,113 +161,105 @@ class DataStream:
     def print_processors_stats(self) -> None:
         print("== DataStream statistics ==")
 
-        # Verificando se não ha processos
         if not self._processos:
             print("No processor found, no data")
             return
 
-        # Se houver, loop por cada um deles
         for proc in self._processos:
             class_name = proc.__class__.__name__
             total_processado = self._stats[class_name]
             resto = len(proc._storage)
 
-            # Para seguir o PDF, mudo o nome para adicionar um espaço antes
             replace = class_name.replace("Processor", " Processor")
             print(f"{replace}: total {total_processado} items processed, "
                   f"remaining {resto} on processor")
 
+    def output_pipeline(self, nb: int, plugin: "ExportPlugin") -> None:
+        for proc in self._processos:
+            lote: list[tuple[int, str]] = []
+            for _ in range(nb):
+                try:
+                    lote.append(proc.output())
+                except IndexError:
+                    break
+            if lote:
+                plugin.process_output(lote)
+
+class ExportPlugin(Protocol):
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        ...
+
+class CSVExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        linha = ",".join(valor for _, valor in data)
+        print("CSV output: ")
+        print(linha)
+
+class JSONExportPlugin:
+    def process_output(self, data: list[tuple[int, str]]) -> None:
+        pares = [
+            f'"item_{rank}": "{valor}"'
+            for rank, valor in data
+        ]
+        print("JSON output: ")
+        print("{" + ", ".join(pares)+ "}")
+
 
 if __name__ == "__main__":
-
-    print("=== Code Nexus - Data Stream ===")
-    print()
+    print("=== Code Nexus - Data Pipeline ===\n")
 
     print("Initialize Data Stream...")
-    stream_processor = DataStream()
-
-    # Mostra stats iniciais (sem processos)
-    stream_processor.print_processors_stats()
+    stream = DataStream()
+    stream.print_processors_stats()
     print()
 
-    # Regitra apenas o Numeric Processor
-    print("Registering Numeric Processor")
-    print()
-    num_proc = NumericProcessor()
-    stream_processor.register_processor(num_proc)
+    print("Registering Processors\n")
+    stream.register_processor(NumericProcessor())
+    stream.register_processor(TextProcessor())
+    stream.register_processor(LogProcessor())
 
-    # "Lote" de dados (iguais do subj.)
-    dados = [
-            'Hello world',
-            [3.14, -1, 2.71],
-            [
-                {
-                    'log_level': 'WARNING',
-                    'log_message': 'Telnet access! Use ssh instead'
-                },
-                {
-                    'log_level': 'INFO',
-                    'log_message': 'User wil is connected'
-                }
-            ],
-            42,
-            ['Hi', 'five']
-        ]
-
-    # Envia 1º "lote" (com erros de não numéricos)
-    print(f"Send first batch of data on stream: {dados}")
-    stream_processor.process_stream(dados)
-    stream_processor.print_processors_stats()
-    print()
-
-    # Registra os outros processadores
-    print("Registering other data processors")
-    text_proc = TextProcessor()
-    log_proc = LogProcessor()
-    stream_processor.register_processor(text_proc)
-    stream_processor.register_processor(log_proc)
-
-    # Reenvia o lote de dados corretamente
-    print("Send the same batch again")
-    stream_processor.process_stream(dados)
-    stream_processor.print_processors_stats()
-    print()
-
-    # Dict que define nome e quantidade
-    consumo = {
-        "NumericProcessor": 3,
-        "TextProcessor": 2,
-        "LogProcessor": 1
-    }
-
-    # Tira o "Processor" para ficar igual no PDF
-    partes_consumo = [
-        f"{classe.replace('Processor', '')} {qtd}"
-        for classe, qtd in consumo.items()
+    batch_1 = [
+        'Hello World',
+        [3.14, -1, 2.71],
+        [
+            {'log_level': 'WARNING', 'log_message':
+             'Telnet access! Use ssh instead'},
+            {'log_level': 'INFO', 'log_message': 'User wil is connected'}
+        ],
+        42,
+        ['Hi', 'five']        
     ]
 
-    # Junta uma virgula e um espaço para separar o print
-    str_consumo = ", ".join(partes_consumo)
-
-    print(f"Consume some elements from the data processors: {str_consumo}")
-
-    # Para cada processo, pega o nome
-    for proc in stream_processor._processos:
-        nome_classe = proc.__class__.__name__
-
-        # Se o nome estiver no dict, ele verifica a quantidade. (O py consegue
-        # ver a quantidade numérica do nome, sabe que NumericProcessor vale 3)
-        if nome_classe in consumo:
-
-            # Pega o valor e coloca em quantidade para fazer o range
-            quantidade = consumo[nome_classe]
-
-            # Guarda e solta o output que da pop
-            for _ in range(quantidade):
-                if proc._storage:
-                    proc.output()
-
+    print(f"Send first batch of data on stream: {batch_1}")
+    stream.process_stream(batch_1)
+    print()
+    stream.print_processors_stats()
     print()
 
-    # Stats finais após o consumo.
-    stream_processor.print_processors_stats()
+    print("Send 3 processed data from each processor to a CSV plugin:")
+    stream.output_pipeline(3, CSVExportPlugin())
+    print()
+    stream.print_processors_stats()
+    print()
+
+    batch_2 = [
+        21,
+        ['I love AI', 'LLMs are wonderful', 'Stay healthy'],
+        [
+            {'log_level': 'ERROR', 'log_message': '500 server crash'},
+            {'log_level': 'NOTICE', 'log_message': 'Certificate expires in 10 days'}
+        ],
+        [32, 42, 64, 84, 128, 168],
+        'World hello'
+    ]
+
+    print(f"Send another batch of data: {batch_2}")
+    stream.process_stream(batch_2)
+    print()
+    stream.print_processors_stats()
+    print()
+
+    print("Send 5 processed data from each processor to a JSON plugin:")
+    stream.output_pipeline(5, JSONExportPlugin())
+    print()
+    stream.print_processors_stats()
