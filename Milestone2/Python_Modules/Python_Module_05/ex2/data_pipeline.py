@@ -174,50 +174,70 @@ class DataStream:
             print(f"{replace}: total {total_processado} items processed, "
                   f"remaining {resto} on processor")
 
+    # Extrai até 'nb' elementos de cada processador e envia para o plugin
     def output_pipeline(self, nb: int, plugin: "ExportPlugin") -> None:
         for proc in self._processos:
             lote: list[tuple[int, str]] = []
+
+            # Tenta retirar no máximo 'nb' itens do storage do processador
             for _ in range(nb):
                 try:
+                    # Tira o 1º elemento (FIFO)
                     lote.append(proc.output())
                 except IndexError:
+                    # Se o storage ficar vazio antes de 'nb', para
                     break
+
+            # Se houver dados extraídos, envia o lote para o plugin formatar
             if lote:
                 plugin.process_output(lote)
 
+
+# Interface (Protocol) p/ Duck Typing: garante que o plugin tem process_output
 class ExportPlugin(Protocol):
     def process_output(self, data: list[tuple[int, str]]) -> None:
         ...
 
+
+# Formata os dados no formato CSV (valores separados por vírgula)
 class CSVExportPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
+
+        # Pega apenas nos valores (descreta o rank) e junta por vírgula
         linha = ",".join(valor for _, valor in data)
         print("CSV output: ")
         print(linha)
 
+
+# Formata os dados no formato JSON utilizando o rank como chave
 class JSONExportPlugin:
     def process_output(self, data: list[tuple[int, str]]) -> None:
+
+        # Cria os pares no formato "item_X": "valor" usando o rank
         pares = [
             f'"item_{rank}": "{valor}"'
             for rank, valor in data
         ]
         print("JSON output: ")
-        print("{" + ", ".join(pares)+ "}")
+        print("{" + ", ".join(pares) + "}")
 
 
 if __name__ == "__main__":
     print("=== Code Nexus - Data Pipeline ===\n")
 
+    # Instancia o stream e exibe estatísticas iniciais (vazio)
     print("Initialize Data Stream...")
     stream = DataStream()
     stream.print_processors_stats()
     print()
 
+    # Regista os 3 processadores no pipeline
     print("Registering Processors\n")
     stream.register_processor(NumericProcessor())
     stream.register_processor(TextProcessor())
     stream.register_processor(LogProcessor())
 
+    # Lote 1 de dados mistos para processar
     batch_1 = [
         'Hello World',
         [3.14, -1, 2.71],
@@ -227,32 +247,37 @@ if __name__ == "__main__":
             {'log_level': 'INFO', 'log_message': 'User wil is connected'}
         ],
         42,
-        ['Hi', 'five']        
+        ['Hi', 'five']
     ]
 
+    # Envia lote 1 e exibe estatísticas atualizadas
     print(f"Send first batch of data on stream: {batch_1}")
     stream.process_stream(batch_1)
     print()
     stream.print_processors_stats()
     print()
 
+    # Extrai até 3 itens de cada processador e exporta em CSV
     print("Send 3 processed data from each processor to a CSV plugin:")
     stream.output_pipeline(3, CSVExportPlugin())
     print()
     stream.print_processors_stats()
     print()
 
+    # Lote 2 de dados mistos
     batch_2 = [
         21,
         ['I love AI', 'LLMs are wonderful', 'Stay healthy'],
         [
             {'log_level': 'ERROR', 'log_message': '500 server crash'},
-            {'log_level': 'NOTICE', 'log_message': 'Certificate expires in 10 days'}
+            {'log_level': 'NOTICE', 'log_message':
+             'Certificate expires in 10 days'}
         ],
         [32, 42, 64, 84, 128, 168],
         'World hello'
     ]
 
+    # Envia lote 2 e exibe estatísticas atualizadas
     print(f"Send another batch of data: {batch_2}")
     stream.process_stream(batch_2)
     print()

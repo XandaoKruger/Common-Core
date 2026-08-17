@@ -55,7 +55,7 @@ class NumericProcessor(DataProcessor):
         return False
 
     # Transforma int em str
-    def ingest(self, data: Any) -> None:
+    def ingest(self, data: int | float | list[int | float]) -> None:
         if not self.validate(data):
             raise ValueError("Improper numeric data")
 
@@ -84,7 +84,7 @@ class TextProcessor(DataProcessor):
         return False
 
     # Armazena os textos
-    def ingest(self, data: Any) -> None:
+    def ingest(self, data: str | list[str]) -> None:
         if not self.validate(data):
             raise ValueError("improper text data")
 
@@ -123,7 +123,7 @@ class LogProcessor(DataProcessor):
             )
         return False
 
-    def ingest(self, data: Any) -> None:
+    def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
         if not self.validate(data):
             raise ValueError("Improper log data")
 
@@ -151,20 +151,19 @@ if __name__ == "__main__":
     print("Testing Numeric Processor...")
     np = NumericProcessor()
 
-    print(f"Testing to validate input '42': {np.validate(42)}")
-    print(f"Testing to validate input 'Hello': {np.validate('Hello')}")
+    print(f"Trying to validate input '42': {np.validate(42)}")
+    print(f"Trying to validate input 'Hello': {np.validate('Hello')}")
 
     print("Test invalid ingestion of string 'foo' without prior validation: ")
     try:
-        invalid_data: Any = "foo"
-        np.ingest(invalid_data)
+        np.ingest("foo")
     except ValueError as error:
         print(f"Got exception: {error}")
 
     print("Processing data: [1, 2, 3, 4, 5]")
     np.ingest([1, 2, 3, 4, 5])
 
-    print("Extrating 3 values...")
+    print("Extracting 3 values...")
     for _ in range(3):
         rank, value = np.output()
         print(f"Numeric value {rank}: ", end="")
