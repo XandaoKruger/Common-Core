@@ -1,6 +1,7 @@
 from .creature import Creature, Charmander, Charmeleon, Wartortle, Squirtle
 from abc import ABC, abstractmethod
 
+
 class CreatureFactory(ABC):
     @abstractmethod
     def create_base(self) -> Creature:

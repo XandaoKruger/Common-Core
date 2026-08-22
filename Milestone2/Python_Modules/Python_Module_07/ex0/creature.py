@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Creature(ABC):
     def __init__(self, nome: str, creature_type: str) -> None:
         self.nome = nome
