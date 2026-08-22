@@ -17,10 +17,12 @@ class Meowscarada(Creature, HealCapability):
         super().__init__("Meowscarada", "Grass/Dark")
 
     def attack(self) -> str: 
-        return ""
+        return "Meowscarada uses Leaf Strom!"
+
+    def heal(self) -> str:
+        return "Meowscarada heals itself and others for a large amount"
 
 
-    
 """ class Meowscarada(Creature, TransformCapability):
     def __init__(self) -> None:
         super().__init__("Meowscarada", "Grass/Dark")
