@@ -17,26 +17,45 @@ class Meowscarada(Creature, HealCapability):
         super().__init__("Meowscarada", "Grass/Dark")
 
     def attack(self) -> str: 
-        return "Meowscarada uses Leaf Strom!"
+        return "Meowscarada uses Leaf Storm!"
 
     def heal(self) -> str:
         return "Meowscarada heals itself and others for a large amount"
 
 
-""" class Meowscarada(Creature, TransformCapability):
+class Dreepy(Creature, TransformCapability):
     def __init__(self) -> None:
-        super().__init__("Meowscarada", "Grass/Dark")
+        super().__init__("Dreepy", "Dragon/Ghost")
         self.transformed = False
 
     def transform(self) -> str:
         self.transformed = True
-        return "Meowscarada shifts into a sharper form!"
+        return "Dreepy shifts into a sharper form!"
 
     def revert(self) -> str:
         self.transformed = False
-        return "Meowscarada returns to normal."
+        return "Dreepy returns to normal."
 
     def attack(self) -> str:
         if self.transformed:
-            return "Meowscarada performs a boosted Leaf Storm!"
-        return "Meowscarada attacks normally." """
+            return "Dreepy performs a boosted Dragon Breath!"
+        return "Dreepy attacks normally."
+
+
+class Dragapult(Creature, TransformCapability):
+    def __init__(self) -> None:
+        super().__init__("Dragapult", "Dragon/Ghost")
+        self.transformed = False
+
+    def transform(self) -> str:
+        self.transformed = True
+        return "Dragapult shifts into a sharper form!"
+
+    def revert(self) -> str:
+        self.transformed = False
+        return "Dragapult returns to normal."
+
+    def attack(self) -> str:
+        if self.transformed:
+            return "Dragapult performs a powerful Dragon Rush!"
+        return "Dragapult attacks normally."

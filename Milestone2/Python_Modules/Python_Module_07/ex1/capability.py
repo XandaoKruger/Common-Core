@@ -12,5 +12,6 @@ class TransformCapability(ABC):
     def transform(self) -> str:
         ...
 
+    @abstractmethod
     def revert(self) -> str:
         ...
