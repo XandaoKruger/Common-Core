@@ -1,7 +1,21 @@
 from ex0 import Creature
 from .capability import HealCapability, TransformCapability
 
-class Sprigatito(Creature, HealCapability):
+
+# Precisei cirar isso pra abranger mais as criaturas, caso contrário depois eu
+# ficaria preso em retornar as criaturas em específico, tirando a
+# versatibilidade do código. Assim eu crio apenas uma classe que abrange as
+# criaturas que tem esse tipo de "poder" e posso retornar a classe, fazendo o
+# mypy aceitar heal() por exemplo, no capacitor.py
+class HealCreature(Creature, HealCapability):
+    pass
+
+
+class TransformCreature(Creature, TransformCapability):
+    pass
+
+
+class Sprigatito(HealCreature):
     def __init__(self) -> None:
         super().__init__("Sprigatito", "Grass")
 
@@ -12,18 +26,18 @@ class Sprigatito(Creature, HealCapability):
         return "Sprigatito heals itself for a small amount"
 
 
-class Meowscarada(Creature, HealCapability):
+class Meowscarada(HealCreature):
     def __init__(self) -> None:
         super().__init__("Meowscarada", "Grass/Dark")
 
-    def attack(self) -> str: 
+    def attack(self) -> str:
         return "Meowscarada uses Leaf Storm!"
 
     def heal(self) -> str:
         return "Meowscarada heals itself and others for a large amount"
 
 
-class Dreepy(Creature, TransformCapability):
+class Dreepy(TransformCreature):
     def __init__(self) -> None:
         super().__init__("Dreepy", "Dragon/Ghost")
         self.transformed = False
@@ -42,7 +56,7 @@ class Dreepy(Creature, TransformCapability):
         return "Dreepy attacks normally."
 
 
-class Dragapult(Creature, TransformCapability):
+class Dragapult(TransformCreature):
     def __init__(self) -> None:
         super().__init__("Dragapult", "Dragon/Ghost")
         self.transformed = False
