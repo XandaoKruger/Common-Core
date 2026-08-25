@@ -6,4 +6,4 @@ from .strategy import (
 __all__ = [
     "BattleStrategy", "NormalStrategy", "AgressiveStrategy",
     "DefensiveStrategy", "InvalidStrategy"
-    ]
+]
