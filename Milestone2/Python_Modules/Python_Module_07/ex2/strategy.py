@@ -54,7 +54,6 @@ class DefensiveStrategy(BattleStrategy):
 strategy"
             )
 
-
         heal_msg = creature.heal()
         atk_msg = creature.attack()
 
