@@ -7,6 +7,7 @@ from ex2 import (
     DefensiveStrategy, InvalidStrategy
 )
 
+
 def battle(opponents: list[tuple[CreatureFactory, BattleStrategy]]) -> None:
     print("*** Tournament ***")
     print(f"{len(opponents)} opponents involved\n")
@@ -47,30 +48,30 @@ if __name__ == "__main__":
     normal_strategy = NormalStrategy()
     agressive_strategy = AgressiveStrategy()
     defense_strategy = DefensiveStrategy()
-     
+
     tournaments = [
         (
-        "Tournament 0 (basic)",
-        " [ (Flame+Normal), (Healing+Defensive) ]",
-        [
-        (flame_factory, normal_strategy),
-        (healing_factory, defense_strategy)
-        ]),
+            "Tournament 0 (basic)",
+            " [ (Flame+Normal), (Healing+Defensive) ]",
+            [
+                (flame_factory, normal_strategy),
+                (healing_factory, defense_strategy)
+            ]),
         (
-        "Tournament 1 (error)",
-        " [ (Flame+Aggressive), (Healing+Defensive) ]",
-        [
-        (flame_factory, agressive_strategy),
-        (healing_factory, defense_strategy)
-        ]),
+            "Tournament 1 (error)",
+            " [ (Flame+Aggressive), (Healing+Defensive) ]",
+            [
+                (flame_factory, agressive_strategy),
+                (healing_factory, defense_strategy)
+            ]),
         (
-        "Tournament 2 (multiple)",
-        " [ (Aqua+Normal), (Healing+Defensive), (Transform+Aggressive) ]",
-        [
-        (aqua_factory, normal_strategy),
-        (healing_factory, defense_strategy),
-        (transform_factory, agressive_strategy)
-        ]),
+            "Tournament 2 (multiple)",
+            " [ (Aqua+Normal), (Healing+Defensive), (Transform+Aggressive) ]",
+            [
+                (aqua_factory, normal_strategy),
+                (healing_factory, defense_strategy),
+                (transform_factory, agressive_strategy)
+            ]),
     ]
 
     for name, description, opponents in tournaments:
