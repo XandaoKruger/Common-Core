@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
 import importlib
 from typing import Any
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+try:
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+except ImportError:
+    np = pd = plt = None # type: ignore[assignment]
 
 nomes = ["pandas", "numpy", "matplotlib", "requests"]
 
@@ -55,9 +59,15 @@ def main() -> None:
     if any(not info["ok"] for info in imports.values()):
         return
 
-
-if __name__ == "__main__":
-    main()
     dados = built_data()
     tabela = data_process(dados)
-    imagem = built_grafic(tabela)
+
+    built_grafic(dados)
+
+
+if __name__ == "__main__":
+    print("\033[33mLOADING STATUS\033[m: Loading programs..\n")
+
+    print("Checking dependencies:")
+
+    main()
