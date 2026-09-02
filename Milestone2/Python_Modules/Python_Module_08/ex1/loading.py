@@ -8,7 +8,7 @@ try:
     import pandas as pd
     import matplotlib.pyplot as plt
 except ImportError:
-    np = pd = plt = None # type: ignore[assignment]
+    np = pd = plt = None  # type: ignore[assignment]
 
 nomes = ["pandas", "numpy", "matplotlib", "requests"]
 
@@ -59,10 +59,18 @@ def main() -> None:
     if any(not info["ok"] for info in imports.values()):
         return
 
+    print("\033[33m\nAnalyzing Matrix data...")
     dados = built_data()
-    tabela = data_process(dados)
+
+    print("Processing 1000 data points...\033[m")
+    data_process(dados)
+
+    print("\033[34mGenerate visualization...\033[m\n")
 
     built_grafic(dados)
+
+    print("\033[32mAnalysis complete!")
+    print("Results saved to\033[m: matrix_analysis.png")
 
 
 if __name__ == "__main__":
