@@ -2,3 +2,5 @@ matrix_env
 .mypy_cache
 *.png
 poetry.lock
+.env
+!.env.example
