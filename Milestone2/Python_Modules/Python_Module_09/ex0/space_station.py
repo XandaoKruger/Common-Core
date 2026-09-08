@@ -46,6 +46,7 @@ def main() -> None:
     print(f"Status: {status}\n")
 
     print("=" * 40)
+
     print("\n\033[31mExpected validation error\033[m:")
 
     try:
