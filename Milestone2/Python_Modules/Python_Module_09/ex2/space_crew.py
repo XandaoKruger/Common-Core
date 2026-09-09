@@ -58,3 +58,80 @@ class SpaceMission(BaseModel):
                 )
 
         return self
+
+
+def main() -> None:
+    sarah = CrewMember(
+        member_id="CM001",
+        name="Sarah Connor",
+        rank=Rank.COMMANDER,
+        age=38,
+        specialization="Mission Command",
+        years_experience=15
+    )
+
+    john = CrewMember(
+        member_id="CM002",
+        name="John Smith",
+        rank=Rank.LIEUTENANT,
+        age=41,
+        specialization="Navigation",
+        years_experience=21
+    )
+
+    alice = CrewMember(
+        member_id="CM003",
+        name="Alice Johnson",
+        rank=Rank.OFFICER,
+        age=27,
+        specialization="Engineering",
+        years_experience=3
+    )
+
+    mission = SpaceMission(
+        mission_id="M2024_MARS",
+        mission_name="Mars Colony Establishment",
+        destination="Mars",
+        launch_date=datetime.fromisoformat("2024-06-01T00:00:00"),
+        duration_days=900,
+        budget_millions=2500.0,
+        crew=[sarah, john, alice],
+    )
+
+    print("\n\033[32mSpace Mission Crew Validation\033[m\n")
+    print("=" * 41)
+    print("\nValid mission created:")
+    print(f"Mission: {mission.mission_name}")
+    print(f"ID: {mission.mission_id}")
+    print(f"Destination: {mission.destination}")
+    print(f"Duration: {mission.duration_days} days")
+    print(f"Budget: ${mission.budget_millions}M")
+    print(f"Crew size: {len(mission.crew)}")
+    print("Crew members:")
+
+    for member in mission.crew:
+        print(
+            f"- {member.name} ({member.rank.value}) - {member.specialization}"
+        )
+
+    print()
+    print("=" * 41)
+    print("\n\033[31mExpected validation error\033[m:")
+
+    try:
+        SpaceMission(
+            mission_id="M2024_TEST",
+            mission_name="Test Mission",
+            destination="Moon",
+            launch_date=datetime.fromisoformat("2024-06-01T00:00:00"),
+            duration_days=30,
+            budget_millions=100.0,
+            crew=[john, alice],
+        )
+    except ValidationError as e:
+        error_msg = e.errors()[0]["msg"].replace("Value error, ", "")
+        print(error_msg)
+
+
+if __name__ == "__main__":
+    main()
