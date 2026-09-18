@@ -2,6 +2,9 @@ from random import Random
 
 
 class MazeGenerator:
+    '''
+    Docstring for MazeGenerator
+    '''
     def __init__(
         self,
         width: int,
