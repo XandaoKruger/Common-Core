@@ -17,6 +17,7 @@ class MazeConfig:
     '''
     Docstring for MazeConfig
     '''
+
     width: int 
     height: int
     entry: tuple[int, int]
@@ -28,6 +29,10 @@ class MazeConfig:
     # chamado automaticamente, logo depois do __init__
     # gerado terminar de atribuir os campos
     def __post_init__(self) -> None:
+        '''
+
+        '''
+
         if self.width <= 0 or self.height <= 0:
             raise ConfigError(
                 f"width/height needs to be positive: \
@@ -66,6 +71,10 @@ class MazeConfig:
 
     @classmethod
     def from_file(cls, path: str) -> "MazeConfig":
+        '''
+
+        '''
+
         raw: dict[str, str] = {}
         try:
             with open(path) as f:
