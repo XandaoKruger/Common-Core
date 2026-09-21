@@ -168,4 +168,25 @@ class MazeGenerator:
 
         return neighbors
 
-    def solve(self) -> :
+    def solve(self) -> list[str]:
+        """Find the shortest path from entry to exit using BFS.
+
+        Returns:
+            Ordered list of direction letters ('N', 'E', 'S', 'W')
+            describing the shortest path from entry to exit.
+        """
+        queue: list[tuple[int, int]] = [self.entry]
+        visited: set[tuple[int, int]] = {self.entry}
+        came_from: dict[tuple[int, int], tuple[int, int]] = {}
+
+        while queue:
+            x, y = queue.pop(0)
+
+            if (x, y) == self.exit_pos:
+                break
+
+            for nx, ny in self._get_reachable_neighbors(x, y, visited):
+                visited.add((nx, ny))
+                came_from[(nx, ny)] = (x, y)
+                queue.append((nx, ny))
+            

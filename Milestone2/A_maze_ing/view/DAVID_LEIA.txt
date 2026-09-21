@@ -1,0 +1,13 @@
+Vc ficou com a parte de visualizer, porque o parser tem que vir antes, então basicamente eu tomei algumas decisões pra moldar o código até aqui, apenas até agora fiz/estou fazendo o parser.
+
+- Veja este vídeo, eu por concelho do Pedro, fui olhar como funciona UV, e cara, não usarei mais outra coisa a não ser UV...
+- https://www.youtube.com/watch?v=zgSQr0d5EVg&t=38s
+
+Basicamente ele é um automatizador, a toml é ele quem gere, e as instalações ele faz MUITO mais rápido, e faz limpo, incluindo diretamente na dependencies do toml, é menos uma coisa para nos preocuparmos
+
+Dito isso, já que vc está com a parte do view, e eu adiantei o que dava, acho legal usarmos a LIB Rich para fazermos a parte de viwer do maze, facilita na protocolagem das cores, e tem muito mais opções
+de cores e mais opções de formatação que podemos usar no maze, fugundo daqueles quadrados sólidos que todo mundo faz. Acho que com isso deixamos o projeto com a nossa cara.
+
+Entretanto se eu conseguir contato antes de você ver isso, provavelmente já mensionei isso tudo, é ignorar essa mensagem KKKKKK, mas serve de lembrete.
+
+Entretanto o claude fez um .md para você sem eu pedir (tudo escrito por ele... não mexi em nada), vou anexar ele aqui porque tem coisas interessantes das decisões que eu tomei.

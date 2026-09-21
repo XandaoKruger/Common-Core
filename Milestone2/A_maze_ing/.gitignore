@@ -1,5 +1,5 @@
-__pycache__
+__pycache__/
+.mypy_cache/
+.venv/
 testes.py
-.venv
-uv.lock
 debug_view.py
