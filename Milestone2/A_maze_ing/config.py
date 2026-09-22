@@ -18,7 +18,7 @@ class MazeConfig:
     Docstring for MazeConfig
     '''
 
-    width: int 
+    width: int
     height: int
     entry: tuple[int, int]
     exit_block: tuple[int, int]
@@ -45,7 +45,7 @@ class MazeConfig:
         # x e menor que width (nao ultrapassa o limite)
         # e o mesmo apos o and, mas para height
         if not (
-            0 <= self.entry[0] < self.width 
+            0 <= self.entry[0] < self.width
             and 0 <= self.entry[1] < self.height
         ):
             raise ConfigError(

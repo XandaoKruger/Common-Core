@@ -59,8 +59,8 @@ class MazeGenerator:
         return walls
 
     def _get_unvisited_neighbors(
-            self, x: int, y: int, visited: set[tuple[int,int]]
-    ) -> list[tuple[int,int]]:
+            self, x: int, y: int, visited: set[tuple[int, int]]
+    ) -> list[tuple[int, int]]:
         """Return in-bounds neighboring cells of (x, y) not yet visited.
 
         Args:
@@ -78,7 +78,7 @@ class MazeGenerator:
         for nx, ny in candidates:
             if (
                 0 <= nx < self.width
-                and 0 <= ny < self.height 
+                and 0 <= ny < self.height
                 and (nx, ny) not in visited
             ):
                 neighbors.append((nx, ny))
@@ -132,11 +132,12 @@ class MazeGenerator:
                 stack.pop()
 
         self._generated = True
-    
+
     def _get_reachable_neighbors(
             self, x: int, y: int, visited: set[tuple[int, int]]
     ) -> list[tuple[int, int]]:
-        """Return in-bounds neighboring cells reachable (no wall) and unvisited.
+        """Return in-bounds neighboring cells reachable (no wall)
+        and unvisited.
 
         Args:
             x: Column of the current cell.
@@ -151,10 +152,10 @@ class MazeGenerator:
         neighbors = []
 
         candidates = [
-        (x, y - 1, 1),   # North, bit 1
-        (x + 1, y, 2),   # East,  bit 2
-        (x, y + 1, 4),   # South, bit 4
-        (x - 1, y, 8),   # West,  bit 8
+            (x, y - 1, 1),   # North, bit 1
+            (x + 1, y, 2),   # East,  bit 2
+            (x, y + 1, 4),   # South, bit 4
+            (x - 1, y, 8),   # West,  bit 8
         ]
 
         for nx, ny, bit in candidates:
