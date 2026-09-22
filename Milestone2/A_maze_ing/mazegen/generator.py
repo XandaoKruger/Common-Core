@@ -189,4 +189,36 @@ class MazeGenerator:
                 visited.add((nx, ny))
                 came_from[(nx, ny)] = (x, y)
                 queue.append((nx, ny))
-            
+
+        path_cells = [self.exit_pos]
+        while path_cells[-1] != self.entry:
+            path_cells.append(came_from[path_cells[-1]])
+        path_cells.reverse()
+
+        directions = []
+        for (x1, y1), (x2, y2) in zip(path_cells, path_cells[1:]):
+            if x2 > x1:
+                directions.append("E")
+            elif x2 < x1:
+                directions.append("W")
+            elif y2 > y1:
+                directions.append("S")
+            elif y2 < y1:
+                directions.append("N")
+
+        return directions
+
+    def to_hex_rows(self) -> list[str]:
+        """Encode the maze as rows of hexadecimal wall digits.
+
+        Returns:
+            One string per row; each character is get_cell_walls(x, y)
+            for that cell, formatted as a single hex digit.
+        """
+        rows = []
+        for y in range(self.height):
+            row = ""
+            for x in range(self.width):
+                row += format(self.get_cell_walls(x, y), "x")
+            rows.append(row)
+        return rows

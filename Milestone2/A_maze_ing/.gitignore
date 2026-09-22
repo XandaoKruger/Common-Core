@@ -3,3 +3,5 @@ __pycache__/
 .venv/
 testes.py
 debug_view.py
+maze_analyzer.py
+maze.txt
