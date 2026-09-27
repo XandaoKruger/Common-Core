@@ -50,6 +50,6 @@ def print_maze(maze: MazeGenerator) -> None:
 
 
 if __name__ == "__main__":
-    maze = MazeGenerator(20, 15, (1, -1), (19, 14), True, seed=1)
+    maze = MazeGenerator(10, 5, (1, -1), (19, 14), True, seed=1)
     maze.generate()
     print_maze(maze)

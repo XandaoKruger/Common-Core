@@ -260,15 +260,70 @@ class MazeGenerator:
     def _braid(self) -> None:
         """Remove all dead ends by opening one extra wall per dead-end cell.
 
-        For every cell with exactly one open wall, opens one of its closed
-        walls to an in-bounds neighbor, turning the dead end into a loop.
-        A single pass over the grid is enough, since opening walls only
-        increases open-wall counts and never creates a new dead end.
+        Skips candidate walls whose removal would create a 3x3 fully-open
+        area, trying alternatives first; falls back to the first candidate
+        only if every option would violate the corridor-width rule.
         """
 
         for y in range(self.height):
             for x in range(self.width):
                 if self._count_open_walls(x, y) == 1:
-                    closed_neighbors = self._get_closed_neighbors(x, y)
-                    nx, ny = self._rng.choice(closed_neighbors)
-                    self._remove_wall(x, y, nx, ny)
+                    candidates = self._get_closed_neighbors(x, y)
+                    self._rng.shuffle(candidates)
+
+                    opened = False
+                    for nx, ny in candidates:
+                        self._remove_wall(x, y, nx, ny)
+                        if self._3x3_open_area():
+                            self._add_wall(x, y, nx, ny)
+                        else:
+                            opened = True
+                            break
+
+                    if not opened and candidates:
+                        nx, ny = candidates[0]
+                        self._remove_wall(x, y, nx, ny)
+
+    def _is_block_fully_open(self, x: int, y: int) -> bool:
+        """
+        Check whether the 3x3 block with top-left cell (x, y) is fully open.
+        """
+
+        for row in range(y, y + 3):
+            for col in range(x, x + 2):
+                if self._vertical_walls[row][col + 1]:
+                    return False
+
+        for row in range(y, y + 2):
+            for col in range(x, x + 3):
+                if self._horizontal_walls[row + 1][col]:
+                    return False
+
+        return True
+
+    def _3x3_open_area(self) -> bool:
+        """
+        Check if any 3x3 block in the grid is fully open
+        (all internal walls removed).
+        """
+
+        for y in range(self.height - 2):
+            for x in range(self.width - 2):
+                if self._is_block_fully_open(x, y):
+                    return True
+        return False
+
+    def _add_wall(self, x1: int, y1: int, x2: int, y2: int) -> None:
+        """
+        Close the wall between two adjacent cells
+        (inverse of _remove_wall).
+        """
+
+        if x2 > x1:
+            self._vertical_walls[y1][x1 + 1] = True
+        elif x2 < x1:
+            self._vertical_walls[y1][x1] = True
+        elif y2 > y1:
+            self._horizontal_walls[y1 + 1][x1] = True
+        elif y2 < y1:
+            self._horizontal_walls[y1][x1] = True
