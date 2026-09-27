@@ -132,6 +132,8 @@ class MazeGenerator:
                 stack.pop()
 
         self._generated = True
+        if not self.perfect:
+            self._braid()
 
     def _get_reachable_neighbors(
             self, x: int, y: int, visited: set[tuple[int, int]]
@@ -223,3 +225,50 @@ class MazeGenerator:
                 row += format(self.get_cell_walls(x, y), "x")
             rows.append(row)
         return rows
+
+    def _count_open_walls(self, x: int, y: int) -> int:
+        walls = self.get_cell_walls(x, y)
+
+        # bin é função do py, que devolve o inteiro em representação binária.
+        # (com "0b" na frente) exemplo: bin(13)  ->  "0b1101".
+        # count("1") é para contar quantos 1 tem no binário, no 13 -> 3
+        closed = bin(walls).count("1")
+
+        # 4 - closed, o que sobra é quantas estão abertas
+        return 4 - closed
+
+    def _get_closed_neighbors(self, x: int, y: int) -> list[tuple[int, int]]:
+
+        walls = self.get_cell_walls(x, y)
+
+        candidates = [
+            (x, y-1, 1),  # North
+            (x+1, y, 2),  # East
+            (x, y+1, 4),  # South
+            (x-1, y, 8),  # West
+        ]
+
+        neighbors = []
+
+        for nx, ny, bit in candidates:
+            if not (0 <= nx < self.width and 0 <= ny < self.height):
+                continue
+            if walls & bit:
+                neighbors.append((nx, ny))
+        return neighbors
+
+    def _braid(self) -> None:
+        """Remove all dead ends by opening one extra wall per dead-end cell.
+
+        For every cell with exactly one open wall, opens one of its closed
+        walls to an in-bounds neighbor, turning the dead end into a loop.
+        A single pass over the grid is enough, since opening walls only
+        increases open-wall counts and never creates a new dead end.
+        """
+
+        for y in range(self.height):
+            for x in range(self.width):
+                if self._count_open_walls(x, y) == 1:
+                    closed_neighbors = self._get_closed_neighbors(x, y)
+                    nx, ny = self._rng.choice(closed_neighbors)
+                    self._remove_wall(x, y, nx, ny)

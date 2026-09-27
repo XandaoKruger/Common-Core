@@ -1,7 +1,7 @@
 __pycache__/
 .mypy_cache/
 .venv/
-testes.py
-debug_view.py
-maze_analyzer.py
+# descomentar depois -> testes.py
+# descomentar depois -> debug_view.py                               para podermos testar depois no cluster
+# descomentar depois -> maze_analyzer.py
 maze.txt
