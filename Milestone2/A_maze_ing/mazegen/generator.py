@@ -1,4 +1,5 @@
 from random import Random
+from mazegen.glyphs import GLYPHS
 
 
 class MazeGenerator:
@@ -72,17 +73,14 @@ class MazeGenerator:
             List of (x, y) tuples for valid, unvisited neighbors.
         """
 
-        neighbors = []
         candidates = [(x, y - 1), (x, y + 1), (x + 1, y), (x - 1, y)]
 
-        for nx, ny in candidates:
-            if (
-                0 <= nx < self.width
-                and 0 <= ny < self.height
-                and (nx, ny) not in visited
-            ):
-                neighbors.append((nx, ny))
-        return neighbors
+        return [
+            (nx, ny) for nx, ny in candidates
+            if 0 <= nx < self.width
+            and 0 <= ny < self.height
+            and (nx, ny) not in visited
+        ]
 
     def _remove_wall(
             self, x1: int, y1: int, x2: int, y2: int
@@ -135,6 +133,34 @@ class MazeGenerator:
         if not self.perfect:
             self._braid()
 
+    def _build_pattern_cells(self, text: str = "42") -> set[tuple[int, int]]:
+        """Compute the set of (x, y) cells forming the given pattern text.
+
+        Centers the pattern in the grid. Returns an empty set (and prints
+        a warning) if the grid is too small to fit it.
+        """
+
+        glyph_w, glyph_h = 3, 5
+        gap = 1
+        total_w = len(text) * glyph_w + (len(text) - 1) * gap
+
+        if total_w > self.width or glyph_h > self.heigth:
+            print(f"Grid too small for '{text}' pattern - skipping.")
+            return set()
+
+        start_x = (self.width - total_w) // 2
+        start_y = (self.height - glyph_h) // 2
+
+        cells: set[tuple[int, int]] = set()
+        for i, char in enumerate(text):
+            glyph = GLYPHS[char]
+            char_x = start_x + i * (glyph_w + gap)
+            for row, line in enumerate(glyph):
+                for col, pixel in enumerate(line):
+                    if pixel == "#":
+                        cells.add((char_x + col, start_y + row))
+        return cells
+
     def _get_reachable_neighbors(
             self, x: int, y: int, visited: set[tuple[int, int]]
     ) -> list[tuple[int, int]]:
@@ -151,7 +177,6 @@ class MazeGenerator:
         """
 
         walls = self.get_cell_walls(x, y)
-        neighbors = []
 
         candidates = [
             (x, y - 1, 1),   # North, bit 1
@@ -160,16 +185,13 @@ class MazeGenerator:
             (x - 1, y, 8),   # West,  bit 8
         ]
 
-        for nx, ny, bit in candidates:
-            if not (0 <= nx < self.width and 0 <= ny < self.height):
-                continue
-            if walls & bit:
-                continue
-            if (nx, ny) in visited:
-                continue
-            neighbors.append((nx, ny))
-
-        return neighbors
+        return [
+            (nx, ny) for nx, ny, bit in candidates
+            if 0 <= nx < self.width
+            and 0 <= ny < self.height
+            and not (walls & bit)
+            and (nx, ny) not in visited
+        ]
 
     def solve(self) -> list[str]:
         """Find the shortest path from entry to exit using BFS.
@@ -238,6 +260,15 @@ class MazeGenerator:
         return 4 - closed
 
     def _get_closed_neighbors(self, x: int, y: int) -> list[tuple[int, int]]:
+        """Return in-bounds neighboring cells with a closed wall in between.
+
+        Args:
+            x: Column of the current cell.
+            y: Row of the current cell.
+
+        Returns:
+            List of (x, y) tuples for neighbors separated by a closed wall.
+        """
 
         walls = self.get_cell_walls(x, y)
 
@@ -248,14 +279,12 @@ class MazeGenerator:
             (x-1, y, 8),  # West
         ]
 
-        neighbors = []
-
-        for nx, ny, bit in candidates:
-            if not (0 <= nx < self.width and 0 <= ny < self.height):
-                continue
-            if walls & bit:
-                neighbors.append((nx, ny))
-        return neighbors
+        return [
+            (nx, ny) for nx, ny, bit in candidates
+            if 0 <= nx < self.width
+            and 0 <= ny < self.height
+            and (walls & bit)
+        ]
 
     def _braid(self) -> None:
         """Remove all dead ends by opening one extra wall per dead-end cell.
