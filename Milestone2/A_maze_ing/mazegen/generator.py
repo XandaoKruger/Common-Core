@@ -110,10 +110,11 @@ class MazeGenerator:
         neighbors left.
         """
 
-        visited: set[tuple[int, int]] = set()
+        pattern_cells = self._build_pattern_cells()
+        visited: set[tuple[int, int]] = set(pattern_cells)
         stack: list[tuple[int, int]] = []
 
-        start = (0, 0)
+        start = self.entry
         visited.add(start)
         stack.append(start)
 
@@ -144,7 +145,7 @@ class MazeGenerator:
         gap = 1
         total_w = len(text) * glyph_w + (len(text) - 1) * gap
 
-        if total_w > self.width or glyph_h > self.heigth:
+        if total_w > self.width or glyph_h > self.height:
             print(f"Grid too small for '{text}' pattern - skipping.")
             return set()
 
