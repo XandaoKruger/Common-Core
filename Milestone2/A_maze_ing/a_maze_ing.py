@@ -1,7 +1,8 @@
 import sys
-
 from config import MazeConfig, ConfigError
 from mazegen import MazeGenerator
+from view import run_menu
+from typing import Callable
 
 
 def write_output(path: str, maze: MazeGenerator) -> None:
@@ -17,6 +18,7 @@ def write_output(path: str, maze: MazeGenerator) -> None:
 
 
 def main() -> None:
+    """Run the maze program."""
     if len(sys.argv) != 2:
         print("Usage: python3 a_maze_ing.py <config_file>")
         sys.exit(1)
@@ -27,17 +29,37 @@ def main() -> None:
         print(f"Config error: {error}")
         sys.exit(1)
 
-    maze = MazeGenerator(
-        width=config.width,
-        height=config.height,
-        entry=config.entry,
-        exit_pos=config.exit_block,
-        perfect=config.perfect,
-        seed=config.seed,
-    )
-    maze.generate()
-    write_output(config.output_file, maze)
-    print(f"Maze written to {config.output_file}")
+    def build(
+        seed: int,
+        perfect: bool,
+        on_step: Callable[[MazeGenerator], None] | None = None,
+    ) -> MazeGenerator:
+        """Create and generate a maze for the given seed."""
+        maze = MazeGenerator(
+            width=config.width,
+            height=config.height,
+            entry=config.entry,
+            exit_pos=config.exit_block,
+            perfect=perfect,
+            seed=seed,
+        )
+        maze.generate(on_step=on_step)
+        return maze
+
+    def save(maze: MazeGenerator) -> None:
+        """Write the displayed maze to the configured output file."""
+        try:
+            write_output(config.output_file, maze)
+        except OSError as error:
+            print(f"Could not write '{config.output_file}': {error}")
+
+    try:
+        build(config.seed, config.perfect)
+    except ValueError as error:
+        print(f"Config error: {error}")
+        sys.exit(1)
+
+    run_menu(build, config.seed, config.perfect, on_new_maze=save)
 
 
 if __name__ == "__main__":

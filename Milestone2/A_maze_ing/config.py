@@ -1,22 +1,88 @@
 from random import randint
 from dataclasses import dataclass
 
+REQUIRED_KEYS = frozenset(
+    {"WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"}
+)
 
-# Classe generica que vai expor os erros
+
 class ConfigError(Exception):
-    '''
-    Docstring for ConfigError
-    '''
-    pass
+    """Raised when the configuration file is missing, malformed or invalid."""
 
 
-# Frozen impede que alguem mude um campo depois de
-# criado, nao pode ser reatribuido
+def _parse_line(line: str, number: int) -> tuple[str, str]:
+    """Split one 'KEY=VALUE' line into a normalised (KEY, value) pair."""
+    if "=" not in line:
+        raise ConfigError(f"line {number}: missing '=': {line!r}")
+    key, value = line.split("=", 1)
+    key = key.strip().upper()
+    if not key:
+        raise ConfigError(f"line {number}: empty key: {line!r}")
+    return key, value.strip()
+
+
+def _read_pairs(path: str) -> dict[str, str]:
+    """Read the config file into a KEY -> value dict.
+
+    Blank lines and lines starting with '#' are ignored.
+
+    Raises:
+        ConfigError: unreadable file, malformed line or duplicate key.
+    """
+    raw: dict[str, str] = {}
+    try:
+        with open(path, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+    except FileNotFoundError:
+        raise ConfigError(f"config file not found: {path}")
+    except (OSError, UnicodeDecodeError) as error:
+        raise ConfigError(f"cannot read '{path}': {error}") from error
+
+    for number, line in enumerate(lines, start=1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        key, value = _parse_line(line, number)
+        if key in raw:
+            raise ConfigError(f"line {number}: duplicate key {key}")
+        raw[key] = value
+    return raw
+
+
+def _parse_int(raw: dict[str, str], key: str) -> int:
+    """Return raw[key] as an int or raise a ConfigError naming the key."""
+    try:
+        return int(raw[key])
+    except ValueError as error:
+        raise ConfigError(
+            f"{key} must be an integer: {raw[key]!r}"
+        ) from error
+
+
+def _parse_point(raw: dict[str, str], key: str) -> tuple[int, int]:
+    """Return raw[key] ('x,y') as an (x, y) tuple of ints."""
+    parts = raw[key].split(",")
+    if len(parts) != 2:
+        raise ConfigError(f"{key} must look like 'x,y': {raw[key]!r}")
+    try:
+        return int(parts[0]), int(parts[1])
+    except ValueError as error:
+        raise ConfigError(
+            f"{key} must be two integers: {raw[key]!r}"
+        ) from error
+
+
+def _parse_bool(raw: dict[str, str], key: str) -> bool:
+    """Accept only True/False (any case); anything else is an error."""
+    value = raw[key].lower()
+    if value not in ("true", "false"):
+        raise ConfigError(f"{key} must be True or False: {raw[key]!r}")
+    return value == "true"
+
+
 @dataclass(frozen=True)
 class MazeConfig:
-    '''
-    Docstring for MazeConfig
-    '''
+    """Validated, immutable maze settings read from the config file."""
 
     width: int
     height: int
@@ -26,119 +92,48 @@ class MazeConfig:
     perfect: bool
     seed: int
 
-    # chamado automaticamente, logo depois do __init__
-    # gerado terminar de atribuir os campos
     def __post_init__(self) -> None:
-        '''
-
-        '''
-
+        """Validate sizes, entry/exit bounds and the output filename."""
+        size = f"{self.width}x{self.height}"
         if self.width <= 0 or self.height <= 0:
-            raise ConfigError(
-                f"width/height needs to be positive: \
-{self.width}x{self.height}"
-            )
-
-        # comparacao encadeada
-        # entry e uma tupla[x, y], x=0 y=1
-        # numa so linha faco: se x nao for negativo e (maior ou igual a 0)
-        # x e menor que width (nao ultrapassa o limite)
-        # e o mesmo apos o and, mas para height
-        if not (
-            0 <= self.entry[0] < self.width
-            and 0 <= self.entry[1] < self.height
-        ):
-            raise ConfigError(
-                f"entry {self.entry} out of range {self.width}x{self.height}"
-            )
-
-        if not (
-            0 <= self.exit_block[0] < self.width
-            and 0 <= self.exit_block[1] < self.height
-        ):
-            raise ConfigError(
-                f"exit {self.exit_block} out of range \
-{self.width}x{self.height}"
-            )
-
+            raise ConfigError(f"width/height must be positive: {size}")
+        for name, (x, y) in (("entry", self.entry),
+                             ("exit", self.exit_block)):
+            if not (0 <= x < self.width and 0 <= y < self.height):
+                raise ConfigError(f"{name} ({x},{y}) out of range {size}")
         if self.entry == self.exit_block:
             raise ConfigError(
                 f"entry and exit cannot be equal: {self.entry}"
             )
-
         if not self.output_file:
             raise ConfigError("output_file cannot be empty")
 
     @classmethod
     def from_file(cls, path: str) -> "MazeConfig":
-        '''
+        """Build a MazeConfig from a KEY=VALUE file.
 
-        '''
+        Unknown keys are ignored; SEED is optional (random if absent).
 
-        raw: dict[str, str] = {}
-        try:
-            with open(path) as f:
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#"):
-                        continue
-                    if "=" not in line:
-                        raise ConfigError(
-                            f"malformed line (missing '='): {line!r}"
-                        )
-                    key, value = line.split("=", 1)
-                    raw[key] = value
-
-        except FileNotFoundError:
-            raise ConfigError(f"Config file not found: {path}")
-
-        required = {
-            "WIDTH",
-            "HEIGHT",
-            "ENTRY",
-            "EXIT",
-            "OUTPUT_FILE",
-            "PERFECT"
-        }
-
-        # issubset confirma se todos os "required" (nesse caso) estao presentes
-        # se nao tiverem, lanca erro
-        if not required.issubset(raw):
+        Raises:
+            ConfigError: on any problem with the file or its values.
+        """
+        raw = _read_pairs(path)
+        missing = REQUIRED_KEYS - raw.keys()
+        if missing:
             raise ConfigError(
-                f"missing required keys: {required - raw.keys()}"
+                f"missing required keys: {', '.join(sorted(missing))}"
             )
-
-        try:
-            width = int(raw["WIDTH"])
-            height = int(raw["HEIGHT"])
-
-            entry_parts = raw["ENTRY"].split(",")
-            exit_parts = raw["EXIT"].split(",")
-
-            if len(entry_parts) != 2 or len(exit_parts) != 2:
-                raise ConfigError(
-                    f"entry/exit must have exactly 2 values: "
-                    f"{raw['ENTRY']}, {raw['EXIT']}"
-                )
-
-            # Tupla com os valores de x e y
-            entry = (int(entry_parts[0]), int(entry_parts[1]))
-            exit_block = (int(exit_parts[0]), int(exit_parts[1]))
-
-            perfect = raw["PERFECT"].strip().lower() == "true"
-            seed = int(raw["SEED"]) if "SEED" in raw else randint(0, 999999)
-        except (ValueError, IndexError) as error:
-            raise ConfigError(f"Invalid value config: {error}") from error
-
-        if "SEED" not in raw:
+        if "SEED" in raw:
+            seed = _parse_int(raw, "SEED")
+        else:
+            seed = randint(0, 999999)
             print(f"Seed: {seed}")
-
         return cls(
-            width=width,
-            height=height,
-            entry=entry,
-            exit_block=exit_block,
+            width=_parse_int(raw, "WIDTH"),
+            height=_parse_int(raw, "HEIGHT"),
+            entry=_parse_point(raw, "ENTRY"),
+            exit_block=_parse_point(raw, "EXIT"),
             output_file=raw["OUTPUT_FILE"],
-            perfect=perfect,
-            seed=seed
+            perfect=_parse_bool(raw, "PERFECT"),
+            seed=seed,
         )
