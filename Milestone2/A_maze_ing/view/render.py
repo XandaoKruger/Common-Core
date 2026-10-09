@@ -1,4 +1,4 @@
-"""Unicode maze renderer built on top of rich."""
+"""Unicode maze render built on top of rich."""
 from rich.console import Console
 from rich.text import Text
 from mazegen import MazeGenerator

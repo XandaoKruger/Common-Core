@@ -1,10 +1,13 @@
 __pycache__/
 .mypy_cache/
 .venv/
-# descomentar depois -> testes/
-# descomentar depois -> debug_view.py                               para podermos testar depois no cluster
-# descomentar depois -> maze_analyzer.py
+build/
+dist/
+*.egg-info/
+testes/
+debug_view.py
+maze_analyzer.py
 maze.txt
-# DAVID_LEIA.txt
-# DAVID.md
-# alterações.txt
+DAVID_LEIA.txt
+DAVID.md
+alterações.txt

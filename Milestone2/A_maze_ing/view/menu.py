@@ -10,7 +10,7 @@ from rich.control import Control
 from rich.screen import Screen
 
 from mazegen import MazeGenerator
-from view.renderer import (
+from view.render import (
     ARROW_SETS,
     JUNCTION_STYLES,
     path_cells,
@@ -116,21 +116,26 @@ def run_menu(
             )
             console.print(
                 f"Seed: {seed}    "
-                f"Path: [repr.number]{'ON' if show_path else 'OFF'}[/]    "
-                f"Perfect: [repr.number]{'ON' if perfect else 'OFF'}[/]    "
-                f"Animation: [repr.number]{'ON' if animate else 'OFF'}[/]",
+                f"Path: "
+                f"{'[bold #00FF00]ON[/]' if show_path else '[bold red]OFF[/]'}"
+                f"    "
+                f"Perfect: "
+                f"{'[bold #00FF00]ON[/]' if perfect else '[bold red]OFF[/]'}"
+                f"    "
+                f"Animation: "
+                f"{'[bold #00FF00]ON[/]' if animate else '[bold red]OFF[/]'}",
                 justify="center",
             )
             console.print(
-                "\n\\[1]new maze    "
-                "\\[2]new colours    "
-                "\\[3]new walls    "
-                "\\[4]random\n"
-                "\\[5]show/hide path    "
-                "\\[6]perfect on/off    "
-                "\\[7]animate path    "
-                "\\[8]animation on/off    "
-                "\\[q]quit",
+                "\n\\[1] New maze    "
+                "\\[2] New colours    "
+                "\\[3] New walls    "
+                "\\[4] Random\n"
+                "\\[5] Show/hide path    "
+                "\\[6] Perfect on/off    "
+                "\\[7] Animate path    "
+                "\\[8] Animation on/off\n"
+                "\\[[bold red]Q[/]] Quit",
                 justify="center",
             )
 

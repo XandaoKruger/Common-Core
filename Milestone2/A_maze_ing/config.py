@@ -4,6 +4,7 @@ from dataclasses import dataclass
 REQUIRED_KEYS = frozenset(
     {"WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"}
 )
+MAX_SIZE = 100
 
 
 class ConfigError(Exception):
@@ -80,6 +81,23 @@ def _parse_bool(raw: dict[str, str], key: str) -> bool:
     return value == "true"
 
 
+def _check_limit(width: int, height: int, max_size: int | None) -> None:
+    """Raise a ConfigError if the grid is bigger than max_size.
+
+    Args:
+        width: Number of cells per row.
+        height: Number of rows.
+        max_size: Largest allowed width and height, or None for no limit.
+    """
+    if max_size is None:
+        return
+    if width > max_size or height > max_size:
+        raise ConfigError(
+            f"WIDTH and HEIGHT must be at most {max_size} "
+            f"(got {width}x{height}); use --limit=off to remove the limit"
+        )
+
+
 @dataclass(frozen=True)
 class MazeConfig:
     """Validated, immutable maze settings read from the config file."""
@@ -109,10 +127,16 @@ class MazeConfig:
             raise ConfigError("output_file cannot be empty")
 
     @classmethod
-    def from_file(cls, path: str) -> "MazeConfig":
+    def from_file(
+        cls, path: str, max_size: int | None = None
+    ) -> "MazeConfig":
         """Build a MazeConfig from a KEY=VALUE file.
 
         Unknown keys are ignored; SEED is optional (random if absent).
+
+        Args:
+            path: Path of the configuration file.
+            max_size: Largest allowed WIDTH and HEIGHT, None for no limit.
 
         Raises:
             ConfigError: on any problem with the file or its values.
@@ -128,9 +152,12 @@ class MazeConfig:
         else:
             seed = randint(0, 999999)
             print(f"Seed: {seed}")
+        width = _parse_int(raw, "WIDTH")
+        height = _parse_int(raw, "HEIGHT")
+        _check_limit(width, height, max_size)
         return cls(
-            width=_parse_int(raw, "WIDTH"),
-            height=_parse_int(raw, "HEIGHT"),
+            width=width,
+            height=height,
             entry=_parse_point(raw, "ENTRY"),
             exit_block=_parse_point(raw, "EXIT"),
             output_file=raw["OUTPUT_FILE"],

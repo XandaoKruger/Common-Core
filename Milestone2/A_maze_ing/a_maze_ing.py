@@ -1,5 +1,6 @@
 import sys
-from config import MazeConfig, ConfigError
+import argparse
+from config import MazeConfig, ConfigError, MAX_SIZE
 from mazegen import MazeGenerator
 from view import run_menu
 from typing import Callable
@@ -16,11 +17,31 @@ def write_output(path: str, maze: MazeGenerator) -> None:
         f.write(f"{maze.exit_pos[0]},{maze.exit_pos[1]}\n")
         f.write("".join(maze.solve()) + "\n")
 
+def parse_args() -> argparse.Namespace:
+    """Read the command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Generate, solve and display a maze."
+    )
+    parser.add_argument("config_file", help="path of the configuration file")
+    parser.add_argument(
+        "--limit",
+        choices=["on", "off"],
+        default="on",
+        help=f"on: WIDTH and HEIGHT must be at most {MAX_SIZE} (default); "
+             "off: no size limit",
+    )
+    return parser.parse_args()
+
 
 def main() -> None:
     """Run the maze program."""
-    if len(sys.argv) != 2:
-        print("Usage: python3 a_maze_ing.py <config_file>")
+    args = parse_args()
+    max_size = MAX_SIZE if args.limit == "on" else None
+
+    try:
+        config = MazeConfig.from_file(args.config_file, max_size)
+    except ConfigError as error:
+        print(f"Config error: {error}")
         sys.exit(1)
 
     try:
@@ -59,7 +80,10 @@ def main() -> None:
         print(f"Config error: {error}")
         sys.exit(1)
 
-    run_menu(build, config.seed, config.perfect, on_new_maze=save)
+    try:
+        run_menu(build, config.seed, config.perfect, on_new_maze=save)
+    except KeyboardInterrupt:
+        ...
 
 
 if __name__ == "__main__":

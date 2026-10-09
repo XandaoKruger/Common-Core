@@ -29,7 +29,6 @@ class MazeGenerator:
         exit_pos: tuple[int, int],
         perfect: bool,
         seed: int,
-        algorithm: str = "backtracker",
     ) -> None:
         """Create a maze with every wall closed; call generate to carve it."""
 
@@ -39,7 +38,6 @@ class MazeGenerator:
         self.exit_pos = exit_pos
         self.perfect = perfect
         self.seed = seed
-        self.algorithm = algorithm
         self._rng = Random(seed)
 
         # Todas as paredes começam fechadas -> Bloco fechado com 4 paredes
@@ -52,7 +50,6 @@ class MazeGenerator:
         self._vertical_walls = [
             [True] * (width + 1) for _ in range(height)
         ]
-        self._generated = False
         self.pattern_cells: set[tuple[int, int]] = set()
 
     def get_cell_walls(self, x: int, y: int) -> int:
@@ -168,7 +165,6 @@ class MazeGenerator:
             else:
                 stack.pop()
 
-        self._generated = True
         if not self.perfect:
             self._braid(on_step)
             self._enforce_corners_and_center(on_step)
