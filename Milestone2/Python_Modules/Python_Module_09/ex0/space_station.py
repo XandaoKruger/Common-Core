@@ -61,6 +61,8 @@ def main() -> None:
     except ValidationError as e:
         error_msg = e.errors()[0]["msg"]
         print(error_msg)
+    else:
+        print("\033[31mValidation should have rejected it\033[m")
 
 
 if __name__ == "__main__":
