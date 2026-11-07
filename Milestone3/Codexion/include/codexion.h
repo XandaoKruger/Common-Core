@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/07 11:56:51 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/07 14:52:39 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 # include <string.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <limits.h>
 
+// "STRUCTS"
 typedef struct s_sim	t_sim;
 
 typedef enum e_sched

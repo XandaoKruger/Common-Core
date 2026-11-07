@@ -6,13 +6,13 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/07 11:53:49 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/07 15:14:57 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int main (void)
+int	main(void)
 {
 	printf("0");
 }
