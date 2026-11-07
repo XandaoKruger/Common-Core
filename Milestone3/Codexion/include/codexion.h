@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   codexion.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
+/*   Updated: 2026/11/07 11:56:51 by acano-kr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CODEXION_H
 # define CODEXION_H
 
@@ -11,10 +23,10 @@
 
 typedef struct s_sim	t_sim;
 
-typedef struct e_sched
+typedef enum e_sched
 {
-	FIFO;
-	EDF;
+	FIFO,
+	EDF
 }	t_sched;
 
 // read-only after parse: no mutex
@@ -73,7 +85,7 @@ typedef struct s_coder
 }	t_coder;
 
 // stop is protected by log_lock
-typedef struct s_sim
+struct s_sim
 {
 	t_config			config;
 	long				start_time;
