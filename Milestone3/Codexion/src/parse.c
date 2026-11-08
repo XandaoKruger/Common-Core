@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:52 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/08 12:36:49 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/08 15:31:49 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,27 @@ int	parse_sched(const char *s, t_sched *out)
 	return (0);
 }
 
-/* int	parse_args(int argc, char **argv, t_config *cfg)
+int	parse_args(int ac, char **av, t_config *cfg)
 {
-	
-} */
+	if (ac != 9)
+		return (0);
+	if (!parse_num(av[1], &cfg->coders))
+		return (0);
+	if (!parse_num(av[2], &cfg->burnout))
+		return (0);
+	if (!parse_num(av[3], &cfg->compile))
+		return (0);
+	if (!parse_num(av[4], &cfg->debug))
+		return (0);
+	if (!parse_num(av[5], &cfg->refactor))
+		return (0);
+	if (!parse_num(av[6], &cfg->compiles_required))
+		return (0);
+	if (!parse_num(av[7], &cfg->cooldown))
+		return (0);
+	if (!parse_sched(av[8], &cfg->sched))
+		return (0);
+	if (cfg->coders < 1 || cfg->burnout < 1)
+		return (0);
+	return (1);
+}

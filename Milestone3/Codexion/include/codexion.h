@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/08 11:42:07 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/08 15:19:32 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_config
 	long				burnout;
 	long				compile;
 	long				debug;
-	long				refractor;
+	long				refactor;
 	long				compiles_required;
 	long				cooldown;
 	t_sched				sched;
