@@ -6,24 +6,24 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/08 20:58:10 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/08 21:58:28 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	long	a;
-	int		i;
+	t_sim	sim;
 
-	a = get_time_ms();
-	i = 0;
-	while (i < 50)
+	memset(&sim, 0, sizeof(sim));
+	if (!parse_args(ac, av, &sim.config))
 	{
-		ms_sleep(10);
-		i++;
+		fprintf(stderr, "Usage: %s number_of_coders time_to_burnout "
+			"time_to_compile time_to_debug time_to_refactor "
+			"number_of_compiles_required dongle_cooldown "
+			"scheduler(fifo|edf)\n", av[0]);
+		return (1);
 	}
-	printf("50 x ms_sleep(10): %ld ms\n", get_time_ms() - a);
 	return (0);
 }
