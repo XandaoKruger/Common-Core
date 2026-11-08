@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/07 14:52:39 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/08 11:42:07 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,12 @@ struct s_sim
 	pthread_mutex_t		log_lock;
 	int					stop;
 };
+
+// FUNCTIONS
+
+// PARSE.C
+int	parse_num(const char *s, long *out);
+int	parse_sched(const char *s, t_sched *out);
+int	parse_args(int argc, char **argv, t_config *cfg);
 
 #endif

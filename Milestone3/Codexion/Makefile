@@ -1,19 +1,19 @@
-NAME = codexion
+NAME =		codexion
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread -g
-DEPFLAGS = -MMD -MP
-INC = -I include
+CC =		cc
+CFLAGS =	-Wall -Wextra -Werror -pthread -g
+DEPFLAGS =	-MMD -MP
+INC =		-I include
 
-SRCS =	src/cleanup.c src/coder.c src/dongle.c src/heap_utils.c \
-		src/heap.c src/init.c src/log.c src/main.c src/monitor.c \
-		src/parse.c src/time.c
+SRCS =		src/cleanup.c src/coder.c src/dongle.c src/heap_utils.c \
+			src/heap.c src/init.c src/log.c src/main.c src/monitor.c \
+			src/parse.c src/time.c
 
-OBJ_DIR = obj
-OBJS = ${SRCS:src/%.c=${OBJ_DIR}/%.o}
-DEP = ${OBJS:.o=.d}
+OBJ_DIR =	obj
+OBJS =		${SRCS:src/%.c=${OBJ_DIR}/%.o}
+DEP =		${OBJS:.o=.d}
 
-ARGS ?= 5 800 200 200 200 3 0 fifo
+ARGS ?=		5 800 200 200 200 3 0 fifo
 
 all:${NAME}
 
@@ -37,12 +37,16 @@ fclean: clean
 
 re:
 
-	@${MAKE} fclean
-	@${MAKE} all
+	@${MAKE} -s fclean
+	@${MAKE} -s all
 
 norm:
 
 	@norminette src include
+
+fnorm:
+
+	@norminette -R CheckForbbidenSourceHeader src include
 
 val: ${NAME}
 
