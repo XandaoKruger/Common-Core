@@ -6,13 +6,13 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/09 09:18:13 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/09 11:40:22 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-/* int	main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_sim	sim;
 
@@ -26,9 +26,9 @@
 		return (1);
 	}
 	return (0);
-} */
+}
 
-int	main(void)
+/* int	main(void)
 {
 	t_sim	sim;
 	t_coder	c;
@@ -46,4 +46,4 @@ int	main(void)
 	print_log(&c, "is debugging");
 	pthread_mutex_destroy(&sim.log_lock);
 	return (0);
-}
+} */

@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/09 09:16:41 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/09 11:23:22 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,8 @@ int		parse_args(int argc, char **argv, t_config *cfg);
 // TIME.C
 long	get_time_ms(void);
 void	ms_sleep(long ms);
+
+// LOG.C
+void	print_log(t_coder *coder, const char *msg);
 
 #endif
