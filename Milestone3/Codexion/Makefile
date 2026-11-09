@@ -2,7 +2,6 @@ NAME =		codexion
 
 CC =		cc
 CFLAGS =	-Wall -Wextra -Werror -pthread -g
-DEPFLAGS =	-MMD -MP
 INC =		-I include
 
 SRCS =		src/cleanup.c src/coder.c src/dongle.c src/heap_utils.c \
@@ -11,7 +10,6 @@ SRCS =		src/cleanup.c src/coder.c src/dongle.c src/heap_utils.c \
 
 OBJ_DIR =	obj
 OBJS =		${SRCS:src/%.c=${OBJ_DIR}/%.o}
-DEP =		${OBJS:.o=.d}
 
 ARGS ?=		5 800 200 200 200 3 0 fifo
 
@@ -22,7 +20,9 @@ ${NAME}: ${OBJS}
 	@echo "\033[0;32m✓ Compiling files \033[0m"
 
 ${OBJ_DIR}/%.o: src/%.c | ${OBJ_DIR}
-	@${CC} ${CFLAGS} ${DEPFLAGS} ${INC} -c $< -o $@
+	@${CC} ${CFLAGS} ${INC} -c $< -o $@
+
+${OBJS}: include/codexion.h
 
 ${OBJ_DIR}:
 	@mkdir -p ${OBJ_DIR}
@@ -46,7 +46,7 @@ norm:
 
 fnorm:
 
-	@norminette -R CheckForbbidenSourceHeader src include
+	@norminette -R CheckForbiddenSourceHeader src include
 
 val: ${NAME}
 
@@ -62,6 +62,4 @@ tsan:
 	@${CC} ${CFLAGS} -fsanitize=thread ${INC} ${SRCS} -o ${NAME}_tsan
 	./${NAME}_tsan ${ARGS}
 
--include ${DEP}
-
-.PHONY: all clean fclean re norm val hel tsan
+.PHONY: all clean fclean re norm fnorm val hel tsan
