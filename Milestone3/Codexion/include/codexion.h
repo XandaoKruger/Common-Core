@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/09 11:23:22 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/10 10:28:23 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,5 +111,11 @@ void	ms_sleep(long ms);
 
 // LOG.C
 void	print_log(t_coder *coder, const char *msg);
+
+// INIT.C
+int		init_sim(t_sim *sim);
+
+// CLEANUP.C
+void	cleanup_sim(t_sim *sim);
 
 #endif

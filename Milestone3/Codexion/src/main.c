@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/09 11:40:22 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/10 10:26:45 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@ int	main(int ac, char **av)
 			"scheduler(fifo|edf)\n", av[0]);
 		return (1);
 	}
+	if (!init_sim(&sim))
+	{
+		cleanup_sim(&sim);
+		fprintf(stderr, "Error: initialization failed\n");
+		return (1);
+	}
+	cleanup_sim(&sim);
 	return (0);
 }
 
