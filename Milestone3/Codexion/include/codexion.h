@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/10 10:28:23 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/14 20:00:41 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,9 @@ int		init_sim(t_sim *sim);
 
 // CLEANUP.C
 void	cleanup_sim(t_sim *sim);
+
+// CODER.C
+void	*coder_routine(void *arg);
+int		launch_coders(t_sim *sim);
 
 #endif

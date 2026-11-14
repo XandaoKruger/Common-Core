@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/10 10:26:45 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/14 20:01:46 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ int	main(int ac, char **av)
 	{
 		cleanup_sim(&sim);
 		fprintf(stderr, "Error: initialization failed\n");
+		return (1);
+	}
+	if (!launch_coders(&sim))
+	{
+		cleanup_sim(&sim);
+		fprintf(stderr, "Error: thread creation failed\n");
 		return (1);
 	}
 	cleanup_sim(&sim);
