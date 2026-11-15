@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/14 19:54:33 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/15 16:52:42 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	*coder_routine(void *arg)
 	i = 0;
 	while (i < coder->sim->config.compiles_required)
 	{
+		take_both(coder);
 		pthread_mutex_lock(&coder->lock);
 		coder->last_compile_start = get_time_ms();
 		pthread_mutex_unlock(&coder->lock);
@@ -34,6 +35,8 @@ void	*coder_routine(void *arg)
 		pthread_mutex_lock(&coder->lock);
 		coder->compile_count++;
 		pthread_mutex_unlock(&coder->lock);
+		release_dongle(coder->left);
+		release_dongle(coder->right);
 		do_phase(coder, "is debugging", coder->sim->config.debug);
 		do_phase(coder, "is refactoring", coder->sim->config.refactor);
 		i++;
