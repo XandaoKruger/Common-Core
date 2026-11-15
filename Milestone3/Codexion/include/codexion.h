@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/15 17:45:09 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/15 22:56:47 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,19 @@ int		launch_coders(t_sim *sim);
 int		take_dongle(t_dongle *d, t_sim *sim);
 void	release_dongle(t_dongle *d);
 int		take_both(t_coder *coder);
+// -----------------------------------------------------------------------------
+
+// MONITOR.C -------------------------------------------------------------------
+int		is_burned_out(t_coder *coder);
+void	declare_burnout(t_coder *coder);
+int		check_burnout(t_sim *sim);
+void	*monitor_routine(void *arg);
+// -----------------------------------------------------------------------------
+
+//MONITOR_UTILS.C --------------------------------------------------------------
+void	wake_dongles(t_sim *sim);
+int		all_done(t_sim *sim);
+void	stop_sim(t_sim *sim);
 // -----------------------------------------------------------------------------
 
 #endif
