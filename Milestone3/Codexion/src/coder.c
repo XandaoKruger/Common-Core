@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/15 17:03:00 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/15 18:16:19 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ void	*coder_routine(void *arg)
 
 	coder = (t_coder *)arg;
 	i = 0;
-	while (i < coder->sim->config.compiles_required)
+	while (i < coder->sim->config.compiles_required && !is_stopped(coder->sim))
 	{
-		take_both(coder);
+		if (!take_both(coder))
+			break ;
 		do_compile(coder);
 		release_dongle(coder->left);
 		release_dongle(coder->right);
