@@ -2,3 +2,6 @@
 obj/
 codexion
 codexion_tsan
+tests/
+tests_heap.c
+test_heap
