@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/15 22:56:47 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/16 08:08:53 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int		parse_args(int argc, char **argv, t_config *cfg);
 
 // TIME.C ----------------------------------------------------------------------
 long	get_time_ms(void);
-void	ms_sleep(long ms);
+void	ms_sleep(long ms, t_sim *sim);
 // -----------------------------------------------------------------------------
 
 // LOG.C -----------------------------------------------------------------------
@@ -131,7 +131,7 @@ int		launch_coders(t_sim *sim);
 
 // DONLGE.C --------------------------------------------------------------------
 int		take_dongle(t_dongle *d, t_sim *sim);
-void	release_dongle(t_dongle *d);
+void	release_dongle(t_dongle *d, long cooldown);
 int		take_both(t_coder *coder);
 // -----------------------------------------------------------------------------
 

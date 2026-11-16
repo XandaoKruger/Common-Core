@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:55 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/08 20:49:05 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/16 08:01:30 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ long	get_time_ms(void)
 	return (timev.tv_sec * 1000 + timev.tv_usec / 1000);
 }
 
-void	ms_sleep(long ms)
+void	ms_sleep(long ms, t_sim *sim)
 {
 	long	end;
 
 	end = get_time_ms() + ms;
-	while (get_time_ms() < end)
+	while (get_time_ms() < end && !is_stopped(sim))
 		usleep(500);
 }

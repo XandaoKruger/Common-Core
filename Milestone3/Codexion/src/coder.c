@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/15 23:14:13 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/16 08:12:50 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	do_phase(t_coder *coder, const char *msg, long ms)
 {
 	print_log(coder, msg);
-	ms_sleep(ms);
+	ms_sleep(ms, coder->sim);
 }
 
 static void	do_compile(t_coder *coder)
@@ -41,8 +41,8 @@ void	*coder_routine(void *arg)
 		if (!take_both(coder))
 			break ;
 		do_compile(coder);
-		release_dongle(coder->left);
-		release_dongle(coder->right);
+		release_dongle(coder->left, coder->sim->config.cooldown);
+		release_dongle(coder->right, coder->sim->config.cooldown);
 		do_phase(coder, "is debugging", coder->sim->config.debug);
 		do_phase(coder, "is refactoring", coder->sim->config.refactor);
 		i++;
