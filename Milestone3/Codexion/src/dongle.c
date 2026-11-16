@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/16 13:17:31 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/16 21:56:51 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	wait_dongle(t_dongle *d)
 {
-	struct timespec ts;
+	struct timespec	ts;
 
 	if (d->is_taken)
 		pthread_cond_wait(&d->cond, &d->lock);
