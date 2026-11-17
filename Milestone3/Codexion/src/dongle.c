@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/17 13:40:01 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/17 14:49:34 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,17 @@ static void	wait_dongle(t_dongle *d)
 
 int	take_dongle(t_dongle *d, t_coder *coder)
 {
+	t_req	top;
+
 	pthread_mutex_lock(&d->lock);
-	while (!is_stopped(coder->sim) && (d->is_taken
-			|| get_time_ms() < d->available_at))
+	if (!queue_request(d, coder))
+	{
+		pthread_mutex_unlock(&d->lock);
+		return (0);
+	}
+	while (!is_stopped(coder->sim)
+		&& (d->is_taken || get_time_ms() < d->available_at
+			|| !is_my_turn(d, coder->id)))
 		wait_dongle(d);
 	if (is_stopped(coder->sim))
 	{
@@ -39,6 +47,7 @@ int	take_dongle(t_dongle *d, t_coder *coder)
 	}
 	else
 	{
+		heap_pop(&d->queue, &top);
 		d->is_taken = 1;
 		pthread_mutex_unlock(&d->lock);
 		return (1);
