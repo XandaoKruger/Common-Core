@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/16 21:54:03 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/17 12:37:34 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,11 +150,15 @@ void	stop_sim(t_sim *sim);
 
 // HEAP.C ----------------------------------------------------------------------
 int		heap_push(t_heap *h, t_req r);
+int		heap_peek(t_heap*h, t_req *out);
+int		heap_pop(t_heap *h, t_req *out);
 // -----------------------------------------------------------------------------
 
 // HEAP_UTILS.C ----------------------------------------------------------------
 int		req_less(t_req a, t_req b);
 void	req_swap(t_req *a, t_req *b);
 void	shift_up(t_heap *h, int i);
+void	shift_down(t_heap *h, int i);
 // -----------------------------------------------------------------------------
+
 #endif
