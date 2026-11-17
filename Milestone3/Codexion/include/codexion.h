@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/17 12:37:34 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/17 13:56:02 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int		launch_coders(t_sim *sim);
 // -----------------------------------------------------------------------------
 
 // DONLGE.C --------------------------------------------------------------------
-int		take_dongle(t_dongle *d, t_sim *sim);
+int		take_dongle(t_dongle *d, t_coder *coder);
 void	release_dongle(t_dongle *d, long cooldown);
 int		take_both(t_coder *coder);
 // -----------------------------------------------------------------------------
@@ -159,6 +159,11 @@ int		req_less(t_req a, t_req b);
 void	req_swap(t_req *a, t_req *b);
 void	shift_up(t_heap *h, int i);
 void	shift_down(t_heap *h, int i);
+// -----------------------------------------------------------------------------
+
+// DONGLE_QUEUE.C --------------------------------------------------------------
+int		is_my_turn(t_dongle *d, int id);
+int		queue_request(t_dongle *d, t_coder *coder);
 // -----------------------------------------------------------------------------
 
 #endif

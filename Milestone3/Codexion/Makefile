@@ -6,7 +6,7 @@ INC =		-I include
 
 SRCS =		src/cleanup.c src/coder.c src/dongle.c src/heap_utils.c \
 			src/heap.c src/init.c src/log.c src/main.c src/monitor.c \
-			src/monitor_utils.c src/parse.c src/time.c
+			src/monitor_utils.c src/parse.c src/time.c src/dongle_queue.c \
 
 OBJ_DIR =	obj
 OBJS =		${SRCS:src/%.c=${OBJ_DIR}/%.o}

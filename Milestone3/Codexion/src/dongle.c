@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/16 21:56:51 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/17 13:40:01 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	wait_dongle(t_dongle *d)
 {
 	struct timespec	ts;
 
-	if (d->is_taken)
+	if (d->is_taken || get_time_ms() >= d->available_at)
 		pthread_cond_wait(&d->cond, &d->lock);
 	else
 	{
@@ -26,12 +26,13 @@ static void	wait_dongle(t_dongle *d)
 	}
 }
 
-int	take_dongle(t_dongle *d, t_sim *sim)
+int	take_dongle(t_dongle *d, t_coder *coder)
 {
 	pthread_mutex_lock(&d->lock);
-	while (!is_stopped(sim) && (d->is_taken || get_time_ms() < d->available_at))
+	while (!is_stopped(coder->sim) && (d->is_taken
+			|| get_time_ms() < d->available_at))
 		wait_dongle(d);
-	if (is_stopped(sim))
+	if (is_stopped(coder->sim))
 	{
 		pthread_mutex_unlock(&d->lock);
 		return (0);
@@ -68,10 +69,10 @@ int	take_both(t_coder *coder)
 		first = coder->right;
 		second = coder->left;
 	}
-	if (!take_dongle(first, coder->sim))
+	if (!take_dongle(first, coder))
 		return (0);
 	print_log(coder, "has taken a dongle");
-	if (!take_dongle(second, coder->sim))
+	if (!take_dongle(second, coder))
 	{
 		release_dongle(first, coder->sim->config.cooldown);
 		return (0);
