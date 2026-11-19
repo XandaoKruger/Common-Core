@@ -6,24 +6,26 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/17 14:49:34 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/19 16:02:11 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static void	wait_dongle(t_dongle *d)
+static void	wait_dongle(t_dongle *d, int id)
 {
 	struct timespec	ts;
+	long			now;
 
-	if (d->is_taken || get_time_ms() >= d->available_at)
-		pthread_cond_wait(&d->cond, &d->lock);
-	else
+	now = get_time_ms();
+	if (!d->is_taken && is_my_turn(d, id) && now < d->available_at)
 	{
 		ts.tv_sec = d->available_at / 1000;
-		ts.tv_nsec = (d->available_at % 1000) / 1000000;
+		ts.tv_nsec = (d->available_at % 1000) * 1000000;
 		pthread_cond_timedwait(&d->cond, &d->lock, &ts);
 	}
+	else if (d->is_taken || !is_my_turn(d, id))
+		pthread_cond_wait(&d->cond, &d->lock);
 }
 
 int	take_dongle(t_dongle *d, t_coder *coder)
@@ -39,7 +41,7 @@ int	take_dongle(t_dongle *d, t_coder *coder)
 	while (!is_stopped(coder->sim)
 		&& (d->is_taken || get_time_ms() < d->available_at
 			|| !is_my_turn(d, coder->id)))
-		wait_dongle(d);
+		wait_dongle(d, coder->id);
 	if (is_stopped(coder->sim))
 	{
 		pthread_mutex_unlock(&d->lock);
