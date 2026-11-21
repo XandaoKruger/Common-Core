@@ -3,8 +3,3 @@ obj/
 codexion
 codexion_tsan
 tests/
-tests_heap.c
-test_heap
-dbg.txt
-out.txt
-o.txt

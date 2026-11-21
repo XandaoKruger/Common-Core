@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/16 08:12:50 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/21 22:01:14 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,4 @@ void	*coder_routine(void *arg)
 		i++;
 	}
 	return (NULL);
-}
-
-int	launch_coders(t_sim *sim)
-{
-	int	i;
-
-	sim->start_time = get_time_ms();
-	i = 0;
-	while (i < sim->config.coders)
-	{
-		sim->coders[i].last_compile_start = sim->start_time;
-		if (pthread_create(&sim->coders[i].thread, NULL, coder_routine,
-				&sim->coders[i]))
-			return (0);
-		i++;
-	}
-	if (pthread_create(&sim->monitor, NULL, monitor_routine, sim))
-		return (0);
-	i = 0;
-	while (i < sim->config.coders)
-	{
-		pthread_join(sim->coders[i].thread, NULL);
-		i++;
-	}
-	pthread_join(sim->monitor, NULL);
-	return (1);
 }
