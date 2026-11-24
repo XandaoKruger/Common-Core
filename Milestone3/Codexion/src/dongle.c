@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 12:47:55 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 22:31:26 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static void	wait_both(t_coder *c)
 {
-	struct timespec	ts;
 	t_sim			*sim;
 	long			until;
 
@@ -25,9 +24,9 @@ static void	wait_both(t_coder *c)
 	if (!c->left->is_taken && !c->right->is_taken
 		&& get_time_ms() < until)
 	{
-		ts.tv_sec = until / 1000;
-		ts.tv_nsec = (until % 1000) * 1000000;
-		pthread_cond_timedwait(&sim->table_cond, &sim->table_lock, &ts);
+		pthread_mutex_unlock(&sim->table_lock);
+		usleep(500);
+		pthread_mutex_lock(&sim->table_lock);
 	}
 	else
 		pthread_cond_wait(&sim->table_cond, &sim->table_lock);
