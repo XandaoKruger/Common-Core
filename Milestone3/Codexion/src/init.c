@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:43 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/10 10:28:15 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:20:58 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ int	init_sim(t_sim *sim)
 	memset(sim->coders, 0, sizeof(t_coder) * n);
 	memset(sim->dongles, 0, sizeof(t_dongle) * n);
 	if (pthread_mutex_init(&sim->log_lock, NULL))
+		return (0);
+	if (pthread_mutex_init(&sim->table_lock, NULL)
+		|| pthread_cond_init(&sim->table_cond, NULL))
 		return (0);
 	return (init_dongles(sim) && init_coders(sim));
 }

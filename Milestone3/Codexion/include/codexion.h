@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/21 22:03:27 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:44:50 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ struct s_sim
 	t_dongle			*dongles;
 	pthread_t			monitor;
 	pthread_mutex_t		log_lock;
+	pthread_mutex_t		table_lock;
+	pthread_cond_t		table_cond;
 	int					stop;
 };
 
@@ -129,8 +131,7 @@ void	*coder_routine(void *arg);
 // -----------------------------------------------------------------------------
 
 // DONLGE.C --------------------------------------------------------------------
-int		take_dongle(t_dongle *d, t_coder *coder);
-void	release_dongle(t_dongle *d, long cooldown);
+void	release_both(t_coder *c);
 int		take_both(t_coder *coder);
 // -----------------------------------------------------------------------------
 
@@ -151,6 +152,7 @@ void	stop_sim(t_sim *sim);
 int		heap_push(t_heap *h, t_req r);
 int		heap_peek(t_heap*h, t_req *out);
 int		heap_pop(t_heap *h, t_req *out);
+void	heap_remove(t_heap *h, int id);
 // -----------------------------------------------------------------------------
 
 // HEAP_UTILS.C ----------------------------------------------------------------
@@ -163,6 +165,9 @@ void	shift_down(t_heap *h, int i);
 // DONGLE_QUEUE.C --------------------------------------------------------------
 int		is_my_turn(t_dongle *d, int id);
 int		queue_request(t_dongle *d, t_coder *coder);
+int		enqueue_both(t_coder *coder);
+int		can_go(t_coder *coder, long now);
+
 // -----------------------------------------------------------------------------
 
 // LAUNCH.C --------------------------------------------------------------------

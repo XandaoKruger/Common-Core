@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:41 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/17 12:40:12 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:50:12 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,22 @@ int	heap_pop(t_heap *h, t_req *out)
 	h->data[0] = h->data[h->size];
 	shift_down(h, 0);
 	return (1);
+}
+
+void	heap_remove(t_heap *h, int id)
+{
+	int	i;
+
+	i = 0;
+	while (i < h->size && h->data[i].coder_id != id)
+		i++;
+	if (i == h->size)
+		return ;
+	h->size--;
+	h->data[i] = h->data[h->size];
+	if (i < h->size)
+	{
+		shift_down(h, i);
+		shift_up(h, i);
+	}
 }

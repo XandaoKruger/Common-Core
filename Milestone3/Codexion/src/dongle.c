@@ -6,88 +6,78 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:36 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/19 16:02:11 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:47:55 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
-static void	wait_dongle(t_dongle *d, int id)
+static void	wait_both(t_coder *c)
 {
 	struct timespec	ts;
-	long			now;
+	t_sim			*sim;
+	long			until;
 
-	now = get_time_ms();
-	if (!d->is_taken && is_my_turn(d, id) && now < d->available_at)
+	sim = c->sim;
+	until = c->left->available_at;
+	if (c->right->available_at > until)
+		until = c->right->available_at;
+	if (!c->left->is_taken && !c->right->is_taken
+		&& get_time_ms() < until)
 	{
-		ts.tv_sec = d->available_at / 1000;
-		ts.tv_nsec = (d->available_at % 1000) * 1000000;
-		pthread_cond_timedwait(&d->cond, &d->lock, &ts);
-	}
-	else if (d->is_taken || !is_my_turn(d, id))
-		pthread_cond_wait(&d->cond, &d->lock);
-}
-
-int	take_dongle(t_dongle *d, t_coder *coder)
-{
-	t_req	top;
-
-	pthread_mutex_lock(&d->lock);
-	if (!queue_request(d, coder))
-	{
-		pthread_mutex_unlock(&d->lock);
-		return (0);
-	}
-	while (!is_stopped(coder->sim)
-		&& (d->is_taken || get_time_ms() < d->available_at
-			|| !is_my_turn(d, coder->id)))
-		wait_dongle(d, coder->id);
-	if (is_stopped(coder->sim))
-	{
-		pthread_mutex_unlock(&d->lock);
-		return (0);
+		ts.tv_sec = until / 1000;
+		ts.tv_nsec = (until % 1000) * 1000000;
+		pthread_cond_timedwait(&sim->table_cond, &sim->table_lock, &ts);
 	}
 	else
-	{
-		heap_pop(&d->queue, &top);
-		d->is_taken = 1;
-		pthread_mutex_unlock(&d->lock);
-		return (1);
-	}
+		pthread_cond_wait(&sim->table_cond, &sim->table_lock);
 }
 
-void	release_dongle(t_dongle *d, long cooldown)
+static void	claim_both(t_coder *c)
 {
-	pthread_mutex_lock(&d->lock);
-	d->is_taken = 0;
-	d->available_at = get_time_ms() + cooldown;
-	pthread_cond_broadcast(&d->cond);
-	pthread_mutex_unlock(&d->lock);
+	heap_remove(&c->left->queue, c->id);
+	heap_remove(&c->right->queue, c->id);
+	c->left->is_taken = 1;
+	c->right->is_taken = 1;
 }
 
-int	take_both(t_coder *coder)
+int	take_both(t_coder *c)
 {
-	t_dongle	*first;
-	t_dongle	*second;
+	t_sim	*sim;
 
-	if (coder->left < coder->right)
+	sim = c->sim;
+	pthread_mutex_lock(&sim->table_lock);
+	if (!enqueue_both(c))
 	{
-		first = coder->left;
-		second = coder->right;
-	}
-	else
-	{
-		first = coder->right;
-		second = coder->left;
-	}
-	if (!take_dongle(first, coder))
-		return (0);
-	print_log(coder, "has taken a dongle");
-	if (!take_dongle(second, coder))
-	{
-		release_dongle(first, coder->sim->config.cooldown);
+		pthread_mutex_unlock(&sim->table_lock);
 		return (0);
 	}
-	print_log(coder, "has taken a dongle");
+	while (!is_stopped(sim) && !can_go(c, get_time_ms()))
+		wait_both(c);
+	if (is_stopped(sim))
+	{
+		pthread_mutex_unlock(&sim->table_lock);
+		return (0);
+	}
+	claim_both(c);
+	pthread_mutex_unlock(&sim->table_lock);
+	print_log(c, "has taken a dongle");
+	print_log(c, "has taken a dongle");
 	return (1);
+}
+
+void	release_both(t_coder *c)
+{
+	t_sim	*sim;
+	long	until;
+
+	sim = c->sim;
+	until = get_time_ms() + sim->config.cooldown;
+	pthread_mutex_lock(&sim->table_lock);
+	c->left->is_taken = 0;
+	c->right->is_taken = 0;
+	c->left->available_at = until;
+	c->right->available_at = until;
+	pthread_cond_broadcast(&sim->table_cond);
+	pthread_mutex_unlock(&sim->table_lock);
 }

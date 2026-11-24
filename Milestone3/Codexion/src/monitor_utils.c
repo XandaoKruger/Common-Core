@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/15 22:25:27 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/15 22:45:21 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:34:18 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,9 @@
 
 void	wake_dongles(t_sim *sim)
 {
-	int	i;
-
-	i = 0;
-	while (i < sim->config.coders)
-	{
-		pthread_mutex_lock(&sim->dongles[i].lock);
-		pthread_cond_broadcast(&sim->dongles[i].cond);
-		pthread_mutex_unlock(&sim->dongles[i].lock);
-		i++;
-	}
+	pthread_mutex_lock(&sim->table_lock);
+	pthread_cond_broadcast(&sim->table_cond);
+	pthread_mutex_unlock(&sim->table_lock);
 }
 
 int	all_done(t_sim *sim)

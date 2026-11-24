@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/21 22:01:14 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 12:33:29 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,7 @@ void	*coder_routine(void *arg)
 		if (!take_both(coder))
 			break ;
 		do_compile(coder);
-		release_dongle(coder->left, coder->sim->config.cooldown);
-		release_dongle(coder->right, coder->sim->config.cooldown);
+		release_both(coder);
 		do_phase(coder, "is debugging", coder->sim->config.debug);
 		do_phase(coder, "is refactoring", coder->sim->config.refactor);
 		i++;
