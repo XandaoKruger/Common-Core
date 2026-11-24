@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 12:44:50 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 16:17:26 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ void	shift_down(t_heap *h, int i);
 // -----------------------------------------------------------------------------
 
 // DONGLE_QUEUE.C --------------------------------------------------------------
-int		is_my_turn(t_dongle *d, int id);
 int		queue_request(t_dongle *d, t_coder *coder);
 int		enqueue_both(t_coder *coder);
 int		can_go(t_coder *coder, long now);

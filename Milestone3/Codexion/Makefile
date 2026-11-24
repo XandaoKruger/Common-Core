@@ -58,4 +58,8 @@ hel: ${NAME}
 
 	valgrind --tool=helgrind ./${NAME} ${ARGS}
 
+drd: ${NAME}
+
+	valgrind --tool=drd ./${NAME} ${ARGS}
+
 .PHONY: all clean fclean re norm fnorm val hel

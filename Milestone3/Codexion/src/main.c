@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/14 20:01:46 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 16:25:28 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,3 @@ int	main(int ac, char **av)
 	return (0);
 }
 
-/* int	main(void)
-{
-	t_sim	sim;
-	t_coder	c;
-
-	memset(&sim, 0, sizeof(sim));
-	memset(&c, 0, sizeof(c));
-	pthread_mutex_init(&sim.log_lock, NULL);
-	sim.start_time = get_time_ms();
-	c.id = 1;
-	c.sim = &sim;
-	print_log(&c, "has taken a dongle");
-	ms_sleep(200);
-	print_log(&c, "is compiling");
-	sim.stop = 1;
-	print_log(&c, "is debugging");
-	pthread_mutex_destroy(&sim.log_lock);
-	return (0);
-} */

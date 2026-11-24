@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/17 13:41:38 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 12:49:41 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/24 16:17:08 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ static int	may_take(t_dongle *d, t_coder *c, long now)
 	other = &c->sim->coders[top.coder_id - 1];
 	return (!(dongle_ready(other->left, now)
 			&& dongle_ready(other->right, now)));
-}
-
-int	is_my_turn(t_dongle *d, int id)
-{
-	t_req	top;
-
-	if (!heap_peek(&d->queue, &top))
-		return (0);
-	return (top.coder_id == id);
 }
 
 int	queue_request(t_dongle *d, t_coder *coder)
