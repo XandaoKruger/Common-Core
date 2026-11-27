@@ -40,6 +40,7 @@ re:
 
 	@${MAKE} -s fclean
 	@${MAKE} -s all
+#	@${MAKE} -s norm
 
 norm:
 

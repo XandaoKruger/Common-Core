@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:34 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 12:33:29 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/27 23:04:08 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,14 @@ void	*coder_routine(void *arg)
 		i++;
 	}
 	return (NULL);
+}
+
+int	is_urgent(t_coder *c, long now)
+{
+	long	last;
+
+	pthread_mutex_lock(&c->lock);
+	last = c->last_compile_start;
+	pthread_mutex_unlock(&c->lock);
+	return (now - last >= c->sim->config.burnout / 2);
 }

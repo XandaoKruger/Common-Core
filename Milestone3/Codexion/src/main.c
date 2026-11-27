@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:48 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 16:25:28 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/25 12:47:17 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,3 @@ int	main(int ac, char **av)
 	cleanup_sim(&sim);
 	return (0);
 }
-

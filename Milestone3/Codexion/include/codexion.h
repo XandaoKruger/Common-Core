@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:24 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 16:17:26 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/26 19:14:09 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ typedef struct s_heap
 // every field below "lock" is protected by "lock"
 typedef struct s_dongle
 {
-	pthread_mutex_t		lock;
-	pthread_cond_t		cond;
 	int					is_taken;
 	long				available_at;
 	long				arrivals;
@@ -128,6 +126,7 @@ void	cleanup_sim(t_sim *sim);
 
 // CODER.C ---------------------------------------------------------------------
 void	*coder_routine(void *arg);
+int		is_urgent(t_coder *c, long now);
 // -----------------------------------------------------------------------------
 
 // DONLGE.C --------------------------------------------------------------------
@@ -166,7 +165,6 @@ void	shift_down(t_heap *h, int i);
 int		queue_request(t_dongle *d, t_coder *coder);
 int		enqueue_both(t_coder *coder);
 int		can_go(t_coder *coder, long now);
-
 // -----------------------------------------------------------------------------
 
 // LAUNCH.C --------------------------------------------------------------------

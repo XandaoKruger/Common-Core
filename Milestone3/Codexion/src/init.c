@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/07 11:53:43 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 12:20:58 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/25 12:46:17 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ static int	init_dongles(t_sim *sim)
 	while (i < sim->config.coders)
 	{
 		d = &sim->dongles[i];
-		if (pthread_mutex_init(&d->lock, NULL)
-			|| pthread_cond_init(&d->cond, NULL))
-			return (0);
 		d->queue.data = malloc(sizeof(t_req) * sim->config.coders);
 		if (!d->queue.data)
 			return (0);

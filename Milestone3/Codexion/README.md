@@ -1,7 +1,10 @@
 *This project has been created as part of the 42 curriculum by acano-kr.*
  
 # Codexion
- 
+
+ <p align="center">
+  <a href="https://github.com/XandaoKruger"><img src="https://img.shields.io/badge/GitHub-acano--kr-181717?style=for-the-badge&logo=github" alt="acano-kr"/></a>
+
 ## Description
  
 Codexion is a concurrency simulation written in C with POSIX threads. `N` coders sit in a circle, and between every two neighbours there is one USB dongle. Each coder repeats the same cycle:
@@ -94,7 +97,7 @@ Coder `i` uses dongle `i` and dongle `(i + 1) % N`. Everything shared lives in a
 A coder never holds one dongle while waiting for the other. It takes **both or none**, in one step done under a single mutex (the "table"):
  
 1. It enqueues one request in the queue of each of its two dongles. The key is an arrival counter (FIFO) or `last_compile_start + time_to_burnout` (EDF); ties are broken by the coder id.
-2. It may start only when both dongles are free and past their cooldown, **and**, for each of its dongles, either its request is at the top of that dongle's queue, or the coder at the top could not start right now (one of its dongles is busy or cooling down). A coder with lower priority can therefore use dongles that would otherwise stay idle, but it never overtakes a higher-priority neighbour that is ready to start.
+2. It may start only when both dongles are free and past their cooldown, **and**, for each of its dongles, either its request is at the top of that dongle's queue, or the coder at the top could not start right now (one of its dongles is busy or cooling down) **and** that coder is not urgent (it has not yet spent half of `time_to_burnout` since its last compile started). A coder with lower priority can therefore use dongles that would otherwise stay idle, but it never overtakes a neighbour that is ready to start or that has already waited for half of its burnout time.
 3. When it starts, it removes its requests from both queues, marks both dongles as taken and prints the two `has taken a dongle` lines.
 4. When it finishes compiling, it marks both dongles as free with `available_at = now + dongle_cooldown` and wakes everybody.
 ## Blocking cases handled
@@ -110,7 +113,7 @@ An earlier version of this project took the dongle with the lowest index first a
  
 ### Priority and starvation
  
-Every dongle has its own queue of pending requests (a min-heap). The rule above makes the order of service follow the scheduler (arrival order for FIFO, nearest deadline for EDF) among the coders that can actually run, and it does not leave dongles idle behind a coder that cannot run. This is a priority rule, not a formal guarantee against starvation; it was validated by measurement (see Testing).
+Every dongle has its own queue of pending requests (a min-heap). The rule above makes the order of service follow the scheduler (arrival order for FIFO, nearest deadline for EDF) among the coders that can actually run, and it does not leave dongles idle behind a coder that cannot run. Without the urgency rule, the two neighbours of one coder could take turns in anti-phase so that its two dongles were never free at the same time: with 5 coders, a burnout of 3000 ms, a cooldown of 400 ms and EDF, a coder went 3000 ms without compiling while both neighbours kept compiling. The urgency rule closes that case. It is still a priority rule and not a formal guarantee against starvation; it was validated by measurement (see Testing).
  
 ### Cooldown handling
  
@@ -138,7 +141,7 @@ With one coder, left and right are the same dongle, so the coder can never hold 
 |---|---|---|
 | `pthread_mutex_t table_lock` | `t_sim` | `is_taken`, `available_at`, `arrivals` and the request heap of every dongle |
 | `pthread_cond_t table_cond` | `t_sim` | waiting coders: broadcast on every release and on stop |
-| `pthread_mutex_t lock` (one per coder) | `t_coder` | `last_compile_start`, `compile_count` (written by the coder, read by the monitor and by the EDF key) |
+| `pthread_mutex_t lock` (one per coder) | `t_coder` | `last_compile_start`, `compile_count` (written by the coder, read by the monitor, by the EDF key and by the urgency check) |
 | `pthread_mutex_t log_lock` | `t_sim` | `stdout` output and the `stop` flag |
  
 Lock hierarchy: **table, then coder, then log**. A thread holding the log mutex never asks for another lock, so no cycle between mutexes can form.
@@ -153,10 +156,13 @@ How races are prevented, with examples:
  
 Checked with valgrind (memcheck, helgrind and drd), repeated runs counting compiles and burnouts, and an isolated test of the heap (`tests/test_heap.c`). Results on this implementation:
  
-- `./codexion 5 800 200 200 200 10 0 fifo`, `5 2000 ... 10 0 fifo`, `5 2000 ... 7 0 edf`, `5 3000 ... 10 400 fifo` and `5 3000 ... 10 400 edf`: 20 runs each, no burnout in any of them.
-- From 1 to 201 coders with `time_to_burnout` 3000 and a cooldown of 100: every coder completes its compiles, no burnout.
-- `5 500 200 200 200 10 0 fifo` always ends with a single `burned out` line, the last one, around timestamp 500.
+- `./codexion 5 3000 200 200 200 10 400 fifo` and `... edf`: 20 runs each, every coder completed its 10 compiles and there was no burnout.
+- `./codexion 5 2000 200 200 200 10 0 fifo`: 10 runs, no burnout.
+- `./codexion 5 500 200 200 200 10 0 fifo` always ends with a single `burned out` line, the last one, around timestamp 500 (10 runs, 0 to 4 ms late).
 - With one coder, the burnout is reported at `time_to_burnout`.
+- From 1 to 201 coders with `time_to_burnout` 3000 and a cooldown of 100: every coder completes its compiles, no burnout.
+Known limitation: on the development virtual machine, single threads occasionally stall for tens of milliseconds even with no other load (phases of about 260 ms instead of 200 ms were measured in 2 of 10 runs, and one captured log shows a debug phase lasting 422 ms). A configuration with little slack, such as `./codexion 5 800 200 200 200 10 0 fifo` (the cycle is 600 ms, so the slack is 200 ms), therefore burned out in roughly 20% of the runs, while the same case with a burnout of 2000 never did.
+ 
 ## Resources
  
 - `man 3 pthread_create`, `pthread_mutex_lock`, `pthread_cond_wait`, `usleep`, `gettimeofday`.

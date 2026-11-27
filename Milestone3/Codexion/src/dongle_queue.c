@@ -6,7 +6,7 @@
 /*   By: acano-kr <acano-kr@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/17 13:41:38 by acano-kr          #+#    #+#             */
-/*   Updated: 2026/11/24 16:17:08 by acano-kr         ###   ########.fr       */
+/*   Updated: 2026/11/26 19:14:34 by acano-kr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static int	may_take(t_dongle *d, t_coder *c, long now)
 	if (top.coder_id == c->id)
 		return (1);
 	other = &c->sim->coders[top.coder_id - 1];
+	if (is_urgent(other, now))
+		return (0);
 	return (!(dongle_ready(other->left, now)
 			&& dongle_ready(other->right, now)));
 }
